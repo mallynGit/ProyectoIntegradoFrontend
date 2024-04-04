@@ -4,8 +4,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-EXPOSE 3000
-CMD [ "node", "src/main.js" ]
+EXPOSE 5173
+CMD [ "npm", "run", "dev", "--", "--host" ]
 
 # docker build -t maruizlosada/frontend-tfg:v1 .
 # docker push maruizlosada/frontend-tfg:v1
