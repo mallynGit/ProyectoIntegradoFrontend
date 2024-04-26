@@ -19,15 +19,18 @@
 </template>
 
 <script setup>
-const router = useRouter()
-let ruta;
-let rutaActual
+const router = useRouter();
+let rutaActual = ref();
+
 router.beforeEach((to, from) => {
-    ruta = router.currentRoute.value.path.split('/')
-    rutaActual = ruta[ruta.length - 1]
+    let ruta = to.path.split('/')
+    rutaActual.value = ruta[ruta.length - 1]
 })
 
-
+onMounted(() => {
+    let r = router.currentRoute.value.path.split('/')
+    rutaActual.value = r[r.length - 1]
+})
 
 </script>
 

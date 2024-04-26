@@ -1,6 +1,6 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  modules: ["nuxt-quasar-ui"],
+  modules: ["nuxt-quasar-ui", "@pinia/nuxt"],
   runtimeConfig: {
     public: {
       urlApi: process.env.URL_API
@@ -11,13 +11,14 @@ export default defineNuxtConfig({
     config: {
       dark: false,
       notify: {
-        position: "top", 
-        timeout: 3000, 
+        position: "top",
+        timeout: 3000,
       },
     },
     plugins: ["Notify"],
-   
+
   },
+  plugins:["~/plugins/axios.js"],
   vite: {
     css: {
       preprocessorOptions: {
@@ -28,6 +29,11 @@ export default defineNuxtConfig({
       }
     }
   },
+  vue: {
+    compilerOptions: {
+      isCustomElement: (tag) => ['marquee'].includes(tag),
+    },
+  }
   // css:[
   //   './assets/main.scss'
   // ],
