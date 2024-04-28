@@ -3,8 +3,9 @@ RUN mkdir /app
 WORKDIR /app
 RUN npm install -g yarn
 COPY package*.json ./
-RUN npm install
-COPY . .
+RUN yarn install --frozen-lockfile && \
+yarn cache clean
+COPY . . 
 EXPOSE 3000
 CMD [ "yarn", "dev", "--host" ]
 
