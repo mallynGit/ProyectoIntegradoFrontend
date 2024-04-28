@@ -1,7 +1,7 @@
 FROM node:20-alpine
 RUN mkdir /app
 WORKDIR /app
-RUN npm install -g yarn
+# RUN npm install -g yarn
 COPY package*.json ./
 RUN yarn install --frozen-lockfile && \
 yarn cache clean
