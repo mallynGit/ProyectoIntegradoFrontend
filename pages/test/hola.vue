@@ -32,6 +32,8 @@ $axios.get("/user/find").then((res) => {
   users.value = res.data;
 });
 
+//vale
+
 let sel = ref("hola");
 let options = ["hola", "mundo"];
 </script>
