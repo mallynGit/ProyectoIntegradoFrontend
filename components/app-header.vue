@@ -25,6 +25,7 @@
 import { useUser } from '#imports';
 const store = useUser()
 const router = useRouter();
+const env = useRuntimeConfig().public
 let rutaActual = ref();
 
 router.beforeEach((to, from) => {
@@ -35,7 +36,7 @@ router.beforeEach((to, from) => {
 onMounted(() => {
     let r = router.currentRoute.value.path.split('/')
     rutaActual.value = r[r.length - 1]
-
+    console.log(env, 'env?')
 })
 
 

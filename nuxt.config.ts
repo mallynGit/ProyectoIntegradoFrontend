@@ -3,7 +3,8 @@ export default defineNuxtConfig({
   modules: ["nuxt-quasar-ui", "@pinia/nuxt"],
   runtimeConfig: {
     public: {
-      urlApi: process.env.URL_API
+      urlApi: process.env.URL_API,
+      environment: process.env.ENV
     }
   },
   quasar: {
