@@ -37,7 +37,7 @@ const register = async () => {
 
     
             alert('Usuario creado correctamente, por favor logueese.')
-        
+            router.push({path: '/auth/login'})
     } catch (err) {
         console.log(err, 'err');
         if(err.response.status ==403){

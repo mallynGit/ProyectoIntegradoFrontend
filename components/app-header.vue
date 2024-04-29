@@ -12,6 +12,9 @@
                     <q-btn flat round dense icon="mdi-gamepad" label="test" to="/test/hola" />
                     <q-btn flat round dense icon="mdi-account-plus" label="register" to="/auth/register" />
                     <q-btn flat round dense icon="mdi-account-arrow-left" label="login" to="/auth/login" />
+                    <q-btn flat round dense icon="mdi-account-off" label="logout" @click="store.logout()"
+                        to="/auth/login" />
+                    <q-chip> Estado: {{ store.isLogged() ? 'ON' : 'OFF' }}</q-chip>
                 </q-toolbar>
             </q-header>
         </q-layout>
@@ -19,6 +22,8 @@
 </template>
 
 <script setup>
+import { useUser } from '#imports';
+const store = useUser()
 const router = useRouter();
 let rutaActual = ref();
 
@@ -30,7 +35,9 @@ router.beforeEach((to, from) => {
 onMounted(() => {
     let r = router.currentRoute.value.path.split('/')
     rutaActual.value = r[r.length - 1]
+
 })
+
 
 </script>
 

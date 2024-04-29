@@ -1,6 +1,6 @@
 <template>
 
-<h2>hola mundio</h2>
+<h3 class="absolute-center">Pagina inicio Bondpet</h3>
 
 </template>
 
