@@ -5,19 +5,19 @@
       gdf
     </div>
     <div style="border: 3px double black">
-      <template v-for="(user, index) of users">
+      <template v-for="(item, index) of items">
         <q-separator v-if="index > 0"></q-separator>
 
-        <q-expansion-item :label="user.email">
+        <q-expansion-item :label="item.email">
           <q-separator />
           <q-card>
-            <q-card-section v-for="(k, v) of filterFields(user)">
-              <div>{{ v }}: {{ k }} </div>
+            <q-card-section v-for="(k, v) of filterFields(item)">
+              <q-input :label="v" :model-value="k" @change="(e) => updateInputValue(item, v, e)" />
             </q-card-section>
             <q-card-actions>
-              <q-btn color="green">Aplicar</q-btn>
+              <q-btn color="green" @click="updateItem(item)">Aplicar</q-btn>
               <q-btn color="grey">Restablecer</q-btn>
-              <q-btn color="red" @click="deleteUser(user._id)">Eliminar</q-btn>
+              <q-btn color="red" @click="deleteItem(item._id)">Eliminar</q-btn>
             </q-card-actions>
 
           </q-card>
@@ -31,13 +31,17 @@
 definePageMeta({
   role: 'admin'
 })
-const { $axios } = useNuxtApp();
 import { useUser } from '~/composables/userComposable.js'
 let l = useUser()
 
-let users = ref([]);
+let items = ref([]);
 
-users.value = await l.findUsers()
+items.value = await l.findUsers()
+
+function updateInputValue(item, propName, value) {
+  item[propName] = value
+  console.log(item, propName, value)
+}
 
 function filterFields(item) {
   if (item._id) {
@@ -46,11 +50,16 @@ function filterFields(item) {
   }
 }
 
-async function deleteUser(id) {
+async function deleteItem(id) {
   let deleted = await l.deleteUser(id)
-  users.value = await l.findUsers()
+  items.value = await l.findUsers()
 
   return alert(JSON.stringify(deleted))
+}
+
+async function updateItem(item) {
+  console.log(item)
+
 }
 
 let sel = ref("hola");

@@ -11,6 +11,10 @@ export const useUser = () => {
         return ler
     }
 
+    const returnStore = () => {
+        return userStore
+    }
+
     const setUser = (user) => {
         userStore.setUser(user)
     }
@@ -31,17 +35,13 @@ export const useUser = () => {
         return userStore.getToken()
     }
 
-    const checkToken = async (token) => {
-        return (await userStore.checkToken(token))
-    }
-
-    const logout = () => {
-        return userStore.logout()
+    const removeToken = () => {
+        return userStore.removeToken()
     }
 
     const isLogged = () => {
         return userStore.isLogged()
     }
 
-    return { login, setUser, getUser, findUsers, deleteUser, getToken, checkToken, logout, isLogged }
+    return { login, setUser, getUser, findUsers, deleteUser, getToken, isLogged, returnStore, removeToken }
 }

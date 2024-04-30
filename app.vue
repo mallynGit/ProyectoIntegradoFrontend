@@ -1,18 +1,34 @@
 <template>
-  <div class="container">
-    <app-header />
+  <div class="loader" v-show="!pageLoaded">
+    <q-spinner-puff color="primary" size="30%" />
+    <span>
+      <h4>Loading...</h4>
+    </span>
+  </div>
+  <div class="container" v-show="pageLoaded">
+    <app-header @loaded="(loaded)=>pageLoaded=loaded"/>
     <div class="content">
       <!-- Aquí colocas tu contenido -->
-      
-        <NuxtPage />
-      
-
-
+      <NuxtPage />
     </div>
   </div>
 </template>
 
+<script setup>
+let pageLoaded = ref(false)
+
+
+</script>
+
 <style scoped>
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
 .container {
   display: flex;
   flex-direction: column;

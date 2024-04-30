@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { useAxiosInstance } from "~/utils/axiosInstance.js";
 
+
 export const useUserStore = defineStore('user', {
     state: () => ({
         user: null,
@@ -16,18 +17,13 @@ export const useUserStore = defineStore('user', {
                 console.log('llega antes')
                 let p = await useAxiosInstance().post('/auth/login', form)
                 this.token = p.data
-                localStorage.setItem('token', p.data)
+                
                 console.log(p, 'peticion')
-                return p
+                return p.data
             } catch (err) {
                 console.log(err.response.status)
                 return err.response.status
             }
-        },
-
-        logout() {
-            this.token = null
-            localStorage.removeItem('token')
         },
 
         getUser() {
@@ -41,21 +37,14 @@ export const useUserStore = defineStore('user', {
             return await useAxiosInstance().delete('/user/delete/' + id)
         },
 
-        getToken() {
-            return this.token
+        removeToken(){
+            this.token = null
         },
 
-        isLogged(){
+        isLogged() {
             return this.token != null
         },
 
-        async checkToken(token) {
-            if (token == null) {
-                token = this.getToken()
-            }
-
-            let res = await useAxiosInstance().post('/auth/check')
-            return res.data
-        }
+        
     }
 })

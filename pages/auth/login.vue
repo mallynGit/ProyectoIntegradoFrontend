@@ -16,7 +16,6 @@
 </template>
 
 <script setup>
-const { $axios } = useNuxtApp();
 const router = useRouter();
 import { useUser } from '~/composables/userComposable';
 
@@ -41,8 +40,9 @@ const login = async () => {
     } else if(res==401){
       return alert("Contraseña incorrecta");
     }
-
+    localStorage.setItem('token', res)
     alert("Login correcto");
+    router.push({ path: '/user/profile' })
   } catch (err) {
     console.log(err, "err");
 

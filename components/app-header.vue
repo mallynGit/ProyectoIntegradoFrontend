@@ -6,15 +6,15 @@
                     <q-toolbar-title style="border: 1px solid black;">
                         <div><q-btn class="glossy title" size="18px" rounded label="Bondpet" to="/" />
                             <marquee behavior="scrolling" direction="left" scrollamount="20" width="88%"
-                                style="top:50px;"><span>{{ rutaActual }}</span></marquee>
+                                style="top:50px;"><span>{{ rutaActual ? rutaActual : '???' }}</span></marquee>
                         </div>
                     </q-toolbar-title>
                     <q-btn flat round dense icon="mdi-gamepad" label="test" to="/test/hola" />
                     <q-btn flat round dense icon="mdi-account-plus" label="register" to="/auth/register" />
                     <q-btn flat round dense icon="mdi-account-arrow-left" label="login" to="/auth/login" />
-                    <q-btn flat round dense icon="mdi-account-off" label="logout" @click="store.logout()"
-                        to="/auth/login" />
-                    <q-chip> Estado: {{ store.isLogged() ? 'ON' : 'OFF' }}</q-chip>
+                    <q-btn flat round dense icon="mdi-account-off" label="logout" @click="logout()" to="/auth/login" />
+                    <q-chip clickable @click="router.push('/user/profile')"> Estado: {{ logueado ? 'ON' : 'OFF'
+                        }}</q-chip>
                 </q-toolbar>
             </q-header>
         </q-layout>
@@ -23,20 +23,48 @@
 
 <script setup>
 import { useUser } from '#imports';
-const store = useUser()
+import { useUserStore } from '#imports';
+
+const emits = defineEmits(['loaded'])
+
+const buttons = [
+    { icon: 'mdi-gamepad', label: 'test', path: '/test/hola', needLog: true },
+    { icon: 'mdi-account-plus', label: 'register', path: '/auth/register', needLog: false },
+    { icon: 'mdi-account-arrow-left', label: 'login', path: '/auth/login', needLog: false },
+    { icon: 'mdi-account-off', label: 'logout', path: '/auth/login', needLog: true, click: "logout()" },
+]
+
+const composable = useUser()
+const store = useUserStore()
 const router = useRouter();
 const env = useRuntimeConfig().public
-let rutaActual = ref();
 
-router.beforeEach((to, from) => {
-    let ruta = to.path.split('/')
-    rutaActual.value = ruta[ruta.length - 1]
+store.$subscribe((mutation, state) => {
+    if (state.token) {
+        logueado.value = true
+    } else {
+        logueado.value = false
+    }
 })
 
-onMounted(() => {
-    let r = router.currentRoute.value.path.split('/')
-    rutaActual.value = r[r.length - 1]
+let logueado = ref(false)
+let rutaActual = ref();
+
+// router.beforeEach((to, from) => {
+//     rutaActual.value = to.path.split('/').pop()
+// })
+
+async function logout() {
+    composable.removeToken()
+    localStorage.removeItem('token')
+    router.push({ path: '/auth/login' })
+}
+
+onMounted(async () => {
+    rutaActual.value = router.currentRoute.value.path.split('/').pop()
+    logueado.value = await composable.isLogged();
     console.log(env, 'env?')
+    emits('loaded', true)
 })
 
 
