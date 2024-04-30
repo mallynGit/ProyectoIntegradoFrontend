@@ -5,9 +5,10 @@ WORKDIR /app
 COPY package*.json ./
 RUN yarn install --frozen-lockfile && \
 yarn cache clean
-COPY . . 
+COPY . .
+RUN mv .env.production .env
 EXPOSE 3000
-CMD [ "yarn", "prod", "--host" ]
+CMD [ "yarn", "dev", "--host" ]
 
 # docker build -t maruizlosada/frontend-tfg:v1 .
 # docker push maruizlosada/frontend-tfg:v1
