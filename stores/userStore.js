@@ -12,6 +12,10 @@ export const useUserStore = defineStore('user', {
             this.user = user
         },
 
+        logout(){
+            console.log ('noufdsa')
+        },
+
         async login(form) {
             try {
                 console.log('llega antes')
