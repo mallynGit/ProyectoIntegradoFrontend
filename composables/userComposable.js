@@ -47,5 +47,9 @@ export const useUser = () => {
         return userStore.logout()
     }
 
-    return { login, setUser, getUser, findUsers, deleteUser, getToken, isLogged, returnStore, removeToken, logout }
+    const checkToken = async () => {
+        return (await userStore.checkToken())
+    }
+
+    return { login, setUser, getUser, findUsers, deleteUser, getToken, isLogged, returnStore, removeToken, logout, checkToken }
 }

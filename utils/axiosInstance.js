@@ -1,21 +1,12 @@
 import { useNuxtApp } from '#app';
-import { useUserStore } from "#imports";
 
-export const useAxiosInstance = (token) => {
+
+export const useAxiosInstance = () => {
     const { $axios } = useNuxtApp();
-    const store = useUserStore()
-    if (store.token == null) {
-        if (localStorage.getItem('token')) {
-            token = localStorage.getItem('token')
-        }
-    } else {
-        token = store.token
-    }
 
-    if (token) {
-        //el metodo de antes duplicaba
-        $axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    if (process.client) {
+        console.log('CLIENTE SI DESDE INSTANICA!!', 'Bearer ' + localStorage.getItem('token'))
+        $axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
     }
-
     return $axios;
 }

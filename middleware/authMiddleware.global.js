@@ -1,5 +1,4 @@
-import { useUserStore } from "~/stores/userStore.js";
-import { checkToken } from '~/utils/checkToken.js'
+import { useUser } from "#imports";
 import { useAxiosInstance } from "~/utils/axiosInstance.js";
 
 
@@ -7,27 +6,30 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
     if (import.meta.server) return
     if (process.client) {
+        let token = false;
         let axios = useAxiosInstance()
-        console.log(to.path)
-        const store = useUserStore();
+        console.log(to)
+        const store = useUser().returnStore();
+
         let check;
 
         // Si no hay token en el store, intentamos obtenerlo del localStorage
         if (!store.token) {
             const localStorageToken = localStorage.getItem('token');
-            console.log(localStorageToken, 'precargando')
-            if (localStorageToken) {
+
+            if (localStorageToken != null) {
                 console.log('Seteando token desde localStorage');
                 store.token = localStorageToken;
-                axios = useAxiosInstance(localStorageToken);
+                check = (await store.checkToken()).token
+                token = localStorageToken
+            } else {
+                
             }
+            console.log(localStorageToken, 'precargando')
         } else {
-            axios = useAxiosInstance(store.token);
-        }
-
-        // Verificamos si hay un token y está caducado
-        if (store.token) {
-            check = await checkToken(store.token, axios);
+            console.log('checkeando')
+            token = store.token
+            check = (await store.checkToken(store.token)).token;
             if (!check) {
                 // Si el token ha caducado, cerramos la sesión y redirigimos al usuario al inicio de sesión
                 store.logout();
@@ -35,10 +37,13 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
                 return navigateTo('/auth/login');
             }
         }
-
         // Verificamos los permisos según el rol de la ruta
         if (to.meta.role) {
-
+            console.log('tiene to.meta')
+            if (!token) {
+                alert('No tienes permiso para acceder a esta ruta.')
+                return navigateTo('/')
+            }
             // Si aún no hemos verificado el token, lo hacemos aquí
             check = await checkToken(store.token, axios);
 
