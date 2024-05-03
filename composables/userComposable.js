@@ -43,5 +43,9 @@ export const useUser = () => {
         return userStore.isLogged()
     }
 
-    return { login, setUser, getUser, findUsers, deleteUser, getToken, isLogged, returnStore, removeToken }
+    const logout = () => {
+        return userStore.logout()
+    }
+
+    return { login, setUser, getUser, findUsers, deleteUser, getToken, isLogged, returnStore, removeToken, logout }
 }
