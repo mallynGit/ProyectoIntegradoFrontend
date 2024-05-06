@@ -34,6 +34,9 @@ export default defineNuxtConfig({
     compilerOptions: {
       isCustomElement: (tag) => ['marquee'].includes(tag),
     },
+  },
+  routeRules: {
+    '/**': { ssr: false }
   }
   // css:[
   //   './assets/main.scss'

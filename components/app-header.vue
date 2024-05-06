@@ -12,7 +12,7 @@
                     <q-btn flat round dense icon="mdi-gamepad" label="test" to="/test/hola" />
                     <q-btn flat round dense icon="mdi-account-plus" label="register" to="/auth/register" />
                     <q-btn flat round dense icon="mdi-account-arrow-left" label="login" to="/auth/login" />
-                    <q-btn flat round dense icon="mdi-account-off" label="logout" @click="logout()" to="/auth/login" />
+                    <q-btn flat round dense icon="mdi-account-off" label="logout" @click="logout()" />
                     <q-chip clickable @click="router.push('/user/profile')"> Estado: {{ logueado ? 'ON' : 'OFF'
                         }}</q-chip>
                 </q-toolbar>
@@ -31,7 +31,7 @@ const buttons = [
     { icon: 'mdi-gamepad', label: 'test', path: '/test/hola', needLog: true },
     { icon: 'mdi-account-plus', label: 'register', path: '/auth/register', needLog: false },
     { icon: 'mdi-account-arrow-left', label: 'login', path: '/auth/login', needLog: false },
-    { icon: 'mdi-account-off', label: 'logout', path: '/auth/login', needLog: true, click: "logout()" },
+    { icon: 'mdi-account-off', label: 'logout', path: '/auth/login', needLog: true, click: logout() },
 ]
 
 const composable = useUser()

@@ -7,8 +7,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     if (import.meta.server) return
     if (process.client) {
         let token = false;
-        let axios = useAxiosInstance()
-        console.log(to)
         const store = useUser().returnStore();
 
         let check;
@@ -25,7 +23,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
             } else {
 
             }
-            console.log(localStorageToken, 'precargando')
         } else {
             console.log('checkeando')
             token = store.token
@@ -53,7 +50,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
                 const userRole = check.role.toLowerCase();
                 console.log(userRole)
                 if (to.meta.role === 'admin' && userRole === 'admin') {
-                    console.log(':)');
+                    console.log(':) admin');
                 } else if (to.meta.role === 'user' && (userRole === 'user' || userRole === 'admin')) {
                     console.log(':)');
                 } else {
