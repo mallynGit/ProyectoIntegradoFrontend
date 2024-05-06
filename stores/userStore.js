@@ -53,7 +53,9 @@ export const useUserStore = defineStore('user', {
             try{
             return (await useAxiosInstance().post('/auth/check', {}, { headers: { Authorization: `Bearer ${this.token}` } })).data
             }catch(err){
-                console.log(err, ' checktoken fallido.......')
+                console.log(err, 'checktoken fallido, borrando token...')
+                localStorage.removeItem('token')
+                this.removeToken()
             }
         }
 

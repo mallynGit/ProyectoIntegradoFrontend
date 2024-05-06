@@ -23,7 +23,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
                 check = (await store.checkToken()).token
                 token = localStorageToken
             } else {
-                
+
             }
             console.log(localStorageToken, 'precargando')
         } else {
@@ -45,11 +45,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
                 return navigateTo('/')
             }
             // Si aún no hemos verificado el token, lo hacemos aquí
-            check = await checkToken(store.token, axios);
+            check = await store.checkToken(store.token);
 
 
 
-            if (check) {
+            if (check.token) {
                 const userRole = check.role.toLowerCase();
                 console.log(userRole)
                 if (to.meta.role === 'admin' && userRole === 'admin') {
