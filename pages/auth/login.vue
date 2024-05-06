@@ -40,7 +40,7 @@ const login = async () => {
     } else if(res==401){
       return alert("Contraseña incorrecta");
     }
-    localStorage.setItem('token', res)
+    // localStorage.setItem('token', res)
     alert("Login correcto");
     router.push({ path: '/user/profile' })
   } catch (err) {

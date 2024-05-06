@@ -13,20 +13,30 @@ export const useUserStore = defineStore('user', {
         },
 
         logout() {
-            console.log('noufdsa')
+            localStorage.removeItem('token')
+            this.$reset()
         },
 
         async login(form) {
             try {
                 console.log('llega antes')
                 let p = await useAxiosInstance().post('/auth/login', form)
-                this.token = p.data
-
+                this.token = p.data.token
+                localStorage.setItem('token', p.data.token)
+                this.user = p.data.user
                 console.log(p, 'peticion')
                 return p.data
             } catch (err) {
                 console.log(err.response.status)
                 return err.response.status
+            }
+        },
+
+        async updateUser(user) {
+            if (this.user.role == 'ADMIN') {
+                return await useAxiosInstance().put('/user/update/' + user._id, user)
+            } else {
+                return await useAxiosInstance().put('/user/update/' + this.user._id, user)
             }
         },
 
@@ -50,9 +60,9 @@ export const useUserStore = defineStore('user', {
         },
 
         async checkToken() {
-            try{
-            return (await useAxiosInstance().post('/auth/check', {}, { headers: { Authorization: `Bearer ${this.token}` } })).data
-            }catch(err){
+            try {
+                return (await useAxiosInstance().post('/auth/check', {}, { headers: { Authorization: `Bearer ${this.token ? this.token : localStorage.getItem('token')}` } })).data
+            } catch (err) {
                 console.log(err, 'checktoken fallido, borrando token...')
                 localStorage.removeItem('token')
                 this.removeToken()

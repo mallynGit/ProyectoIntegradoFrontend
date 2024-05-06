@@ -20,7 +20,7 @@ export const useUser = () => {
     }
 
     const getUser = () => {
-        return userStore.getUser()
+        return userStore.user
     }
 
     const findUsers = async () => {

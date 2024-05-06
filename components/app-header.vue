@@ -3,11 +3,11 @@
         <q-layout view="lHh lpr lfr" container style="height: 8vh; width:100%;">
             <q-header elevated>
                 <q-toolbar class="glossy tb">
-                    <q-toolbar-title style="border: 1px solid black;">
-                        <div><q-btn class="glossy title" size="18px" rounded label="Bondpet" to="/" />
-                            <marquee behavior="scrolling" direction="left" scrollamount="20" width="88%"
-                                style="top:50px;"><span>{{ rutaActual ? rutaActual : '???' }}</span></marquee>
-                        </div>
+                    <q-toolbar-title style="display: flex; vertical-align: middle;">
+                        <q-btn class="glossy title" size="18px" rounded label="Bondpet" to="/" />
+                        <marquee direction="left" scrollamount="20" width="88%" style="user-select: none;"><span
+                                style="font-size:31px;">{{ rutaActual ? rutaActual : '???' }}</span>
+                        </marquee>
                     </q-toolbar-title>
                     <q-btn flat round dense icon="mdi-gamepad" label="test" to="/test/hola" />
                     <q-btn flat round dense icon="mdi-account-plus" label="register" to="/auth/register" />
@@ -50,20 +50,22 @@ store.$subscribe((mutation, state) => {
 let logueado = ref(false)
 let rutaActual = ref();
 
-// router.beforeEach((to, from) => {
-//     rutaActual.value = to.path.split('/').pop()
-// })
+router.beforeEach((to, from) => {
+    rutaActual.value = to.path.split('/').pop()
+})
 
 async function logout() {
-    composable.removeToken()
-    localStorage.removeItem('token')
-    router.push({ path: '/auth/login' })
+    try {
+        composable.removeToken()
+        router.push({ path: '/auth/login' })
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 onMounted(async () => {
     rutaActual.value = router.currentRoute.value.path.split('/').pop()
     logueado.value = await composable.isLogged();
-    console.log(env, 'env?')
     emits('loaded', true)
 })
 

@@ -17,6 +17,14 @@
 <script setup>
 let pageLoaded = ref(false)
 
+onBeforeMount(() => {
+    console.log( ' very')
+})
+
+const router = useRouter();
+router.beforeEach((to, from) => {
+    console.log('is this from before?')
+})
 
 </script>
 
