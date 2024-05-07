@@ -75,7 +75,7 @@ const register = async () => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .button-container {
     display: flex;
     align-items: center;
@@ -83,7 +83,7 @@ const register = async () => {
 }
 
 .errors {
-    border: 1px dotted orchid;
+    background: $primary;
     width: 25%;
 }
 

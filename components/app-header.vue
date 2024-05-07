@@ -9,6 +9,7 @@
                                 style="font-size:31px;">{{ rutaActual ? rutaActual : '???' }}</span>
                         </marquee>
                     </q-toolbar-title>
+                    <q-btn flat round dense icon="mdi-dog-side" label="Pets" to="/pets" />
                     <q-btn flat round dense icon="mdi-gamepad" label="test" to="/test/hola" />
                     <q-btn flat round dense icon="mdi-account-plus" label="register" to="/auth/register" />
                     <q-btn flat round dense icon="mdi-account-arrow-left" label="login" to="/auth/login" />

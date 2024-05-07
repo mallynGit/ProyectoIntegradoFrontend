@@ -4,6 +4,8 @@
 
     <div class="text-h5 absolute-center" v-show="user.email">Email: {{ user.email }}</div>
 
+    <q-btn to="/pets/add-pet">Anadir mascota</q-btn>
+
 </template>
 
 

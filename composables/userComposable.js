@@ -11,6 +11,10 @@ export const useUser = () => {
         return ler
     }
 
+    const update = async (form) => {
+        return await userStore.update(form)
+    }
+
     const returnStore = () => {
         return userStore
     }
@@ -51,5 +55,5 @@ export const useUser = () => {
         return (await userStore.checkToken())
     }
 
-    return { login, setUser, getUser, findUsers, deleteUser, getToken, isLogged, returnStore, removeToken, logout, checkToken }
+    return { login, setUser, getUser, findUsers, deleteUser, getToken, isLogged, returnStore, removeToken, logout, checkToken, update }
 }

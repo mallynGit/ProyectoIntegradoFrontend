@@ -32,7 +32,7 @@ export const useUserStore = defineStore('user', {
             }
         },
 
-        async updateUser(user) {
+        async update(user) {
             if (this.user.role == 'ADMIN') {
                 return await useAxiosInstance().put('/user/update/' + user._id, user)
             } else {
