@@ -5,7 +5,7 @@
   "description": "Frontend para el proyecto TFG de Bondpet",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "nuxt dev --dotenv .env",
     "prod": "nuxt dev --dotenv .env.development",
     "generate": "nuxt generate",
     "preview": "nuxt preview",

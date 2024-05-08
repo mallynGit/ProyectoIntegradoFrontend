@@ -1,33 +1,54 @@
 <template>
 
-<div>probando index pets</div>
-<template v-for="pet of pets">
-<q-card  class="pet-card q-mx-sm">
-    <q-card-section>
-        <p v-for="(k, v) of pet">{{v}}: {{k}}</p>
-        {{typeof pet.foto_perfil}}
-        <img  />
-    </q-card-section>
-</q-card>
-</template>
+    <div class="cards-container q-pa-lg">
 
+        <q-card class="pet-card q-mx-sm" v-for="pet of pets">
+            <q-card-section>
+                <p v-for="(k, v) of filterFields(pet)"><span class="text-h5">{{ v }}</span>: <span class="text-subtitle1">{{ k }}</span></p>
+            </q-card-section>
+            <q-card-section class="">
+                <div class="img-container row justify-center items-center">
+                    <q-img :src="pet.foto_perfil" width="50%" ratio=1 />
+                </div>
+            </q-card-section>
+            <q-card-section class="row justify-evenly">
+                <q-btn label="Posts" color="green"></q-btn>
+                <q-btn label="Comentarios" color="purple"></q-btn>
+                <q-btn label="Media" color="orange"></q-btn>
+            </q-card-section>
+        </q-card>
+    </div>
 </template>
 
 
 <script setup>
-import {usePet} from '~/composables/petComposable'
+import { usePet } from '~/composables/petComposable'
+
 
 let pets = ref([])
 
 pets.value = await usePet().getPets()
 
+function filterFields(item) {
+    let filtered = (({ _id, foto_perfil, multimedia, posts, comentarios, ...item }) => item)(item)
+    return filtered
+}
+
 </script>
 
 <style scoped lang="scss">
-
 .pet-card {
     width: 20%;
-    display: inline-block;
 }
 
+.cards-container {
+    display: flex;
+    justify-content: space-evenly;
+    /* corrected class name */
+}
+
+.img-container {
+    max-width: 100%;
+    max-height: 200%;
+}
 </style>
