@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 import { useAxiosInstance } from "~/utils/axiosInstance.js";
+import { duplicate } from '~/utils/duplicateMedia';
+import axios from 'axios'
 const env = useRuntimeConfig().public
 
 export const usePetStore = defineStore('pet', {
@@ -21,7 +23,7 @@ export const usePetStore = defineStore('pet', {
         async createPet(form) {
             useAxiosInstance().post('/pets/createPet', form, { headers: { "Content-Type": "multipart/form-data" } }).then(res => {
                 if (env.environment == 'development') {
-                    fetch('http://bondpetapi.duckdns.org:3001/media/post?filename=' + res.data.foto_perfil, { method: 'POST', body: form.media, headers: { "Content-Type": "multipart/form-data" } })
+                    duplicate(form, res.data.foto_perfil)
                 }
             })
         },
@@ -29,8 +31,8 @@ export const usePetStore = defineStore('pet', {
         async update(form) {
             return await useAxiosInstance().put('/pets/update', form)
         }
+    },
 
-    }
 
 
 })

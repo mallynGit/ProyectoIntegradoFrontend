@@ -2,7 +2,7 @@
 
     <div class="cards-container q-pa-lg">
 
-        <q-card class="pet-card q-mx-sm" v-for="pet of pets">
+        <q-card class="pet-card q-mx-sm q-my-md" v-for="pet of pets">
             <q-card-section>
                 <p v-for="(k, v) of filterFields(pet)"><span class="text-h5">{{ v }}</span>: <span class="text-subtitle1">{{ k }}</span></p>
             </q-card-section>
@@ -44,6 +44,7 @@ function filterFields(item) {
 .cards-container {
     display: flex;
     justify-content: space-evenly;
+    flex-wrap: wrap;
     /* corrected class name */
 }
 
