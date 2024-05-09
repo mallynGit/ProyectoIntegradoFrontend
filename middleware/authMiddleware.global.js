@@ -4,7 +4,7 @@ import { useAxiosInstance } from "~/utils/axiosInstance.js";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
 
-    if (import.meta.server) return
+    // if (import.meta.server) return
     if (process.client) {
         try {
             let token = false;
@@ -22,9 +22,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
                         // Si el token ha caducado, cerramos la sesión y redirigimos al usuario al inicio de sesión
                         alert('La sesión ha caducado. Por favor, inicie sesión de nuevo.');
                         store.logout();
+                        console.log('llega aqui.......')
                         return navigateTo('/auth/login');
                     }
-                    console.log(check)
+                    console.log(check, 'checando')
                     if (store.user == null) {
                         store.user = check.user
                     }

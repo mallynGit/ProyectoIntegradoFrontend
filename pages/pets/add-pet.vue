@@ -16,7 +16,7 @@
 
 <script setup>
 import { usePet } from '~/composables/petComposable';
-
+import { useUser } from '#imports';
 
 const form = ref({
     nombre: '',
@@ -24,6 +24,7 @@ const form = ref({
     categoria: '',
     edad: '',
     media: null,
+    userId: useUser().getUser()._id
 })
 
 const submit = (event) => {
@@ -35,6 +36,7 @@ const submit = (event) => {
     formData.append('categoria', form.value.categoria)
     formData.append('edad', form.value.edad)
     formData.append('media', form.value.media)
+    formData.append('userId', form.value.userId)
 
     usePet().createPet(formData)
 }

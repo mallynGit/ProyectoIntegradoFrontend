@@ -28,17 +28,17 @@ import { useUserStore } from '#imports';
 
 const emits = defineEmits(['loaded'])
 
+const store = useUserStore()
+const router = useRouter();
+const env = useRuntimeConfig().public
+const composable = useUser()
+
 const buttons = [
     { icon: 'mdi-gamepad', label: 'test', path: '/test/hola', needLog: true },
     { icon: 'mdi-account-plus', label: 'register', path: '/auth/register', needLog: false },
     { icon: 'mdi-account-arrow-left', label: 'login', path: '/auth/login', needLog: false },
     { icon: 'mdi-account-off', label: 'logout', path: '/auth/login', needLog: true, click: logout() },
 ]
-
-const composable = useUser()
-const store = useUserStore()
-const router = useRouter();
-const env = useRuntimeConfig().public
 
 store.$subscribe((mutation, state) => {
     if (state.token) {
@@ -57,7 +57,7 @@ router.beforeEach((to, from) => {
 
 async function logout() {
     try {
-        composable.removeToken()
+        composable.logout()
         router.push({ path: '/auth/login' })
     } catch (err) {
         console.log(err)

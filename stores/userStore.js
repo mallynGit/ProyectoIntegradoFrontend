@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { useAxiosInstance } from "~/utils/axiosInstance.js";
+import { duplicate } from '~/utils/duplicateMedia';
 
 
 export const useUserStore = defineStore('user', {
@@ -40,6 +41,23 @@ export const useUserStore = defineStore('user', {
             }
         },
 
+        async register(user, profilePic) {
+            console.log(user, profilePic, ' desde register')
+            let formData = new FormData()
+            for (let key in user) {
+                formData.append(key, user[key]);
+            }
+            if (profilePic) {
+                formData.append('media', profilePic);
+            }
+            return useAxiosInstance().post('/auth/register', formData, { headers: { "Content-Type": "multipart/form-data" } }).then(res => {
+                console.log(res, ' desde store regitsrer?')
+                if (useRuntimeConfig().public.environment == 'development') {
+                    duplicate(formData, res.data._id)
+                }
+            })
+        },
+
         getUser() {
             return this.user
         },
@@ -53,6 +71,7 @@ export const useUserStore = defineStore('user', {
 
         removeToken() {
             this.token = null
+            localStorage.removeItem('token')
         },
 
         isLogged() {

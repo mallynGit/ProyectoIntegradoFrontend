@@ -8,6 +8,7 @@
             <q-form @submit="register">
                 <q-input v-for="(field, name) in registerForm" :label="name" :key="name" required filled
                     v-model="registerForm[name]" @change="validate" class="q-my-sm" />
+                <q-file v-model="profilePic" label="Foto de perfil" class="q-my-sm"></q-file>
                 <q-separator />
                 <div class="button-container q-pa-md">
                     <q-btn class="input" label="Volver" @click="router.back()" />
@@ -21,8 +22,8 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useUser } from '#imports';
 
-const { $axios } = useNuxtApp();
 const router = useRouter();
 
 let errorArray = []
@@ -36,6 +37,8 @@ let registerForm = ref({
     password: "",
     repeatPassword: "",
 });
+
+let profilePic = ref(null)
 
 const validate = () => {
     errors.value = []
@@ -63,7 +66,7 @@ const register = async () => {
             alert('Arregla los errores que existan en el formulario.')
             return
         }
-        let res = await $axios.post("/auth/register", registerForm.value);
+        await useUser().register(registerForm.value, profilePic.value)
         alert('Usuario creado correctamente, por favor logueese.');
         router.push({ path: '/auth/login' });
     } catch (err) {

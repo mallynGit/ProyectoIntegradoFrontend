@@ -15,6 +15,12 @@ export const usePetStore = defineStore('pet', {
             let pets = (await useAxiosInstance().get('/pets/getAll')).data
             for (let pet of pets) {
                 pet.foto_perfil = env.urlApi + '/uploads/' + pet.foto_perfil._id + '.' + pet.foto_perfil.tipo
+                let multimedia = []
+                for (let pic of pet.multimedia) {
+                    multimedia.push(env.urlApi + '/uploads/' + pic._id + '.' + pic.tipo)
+                    console.log(multimedia)
+                }
+                pet.multimedia = multimedia
             }
             this.pets = pets
             return pets
