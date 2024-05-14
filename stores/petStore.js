@@ -18,7 +18,7 @@ export const usePetStore = defineStore('pet', {
                 let multimedia = []
                 for (let pic of pet.multimedia) {
                     multimedia.push(env.urlApi + '/uploads/' + pic._id + '.' + pic.tipo)
-                    console.log(multimedia)
+                    // console.log(multimedia)
                 }
                 pet.multimedia = multimedia
             }
