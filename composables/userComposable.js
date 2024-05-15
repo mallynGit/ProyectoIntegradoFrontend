@@ -7,7 +7,6 @@ export const useUser = () => {
 
     const login = async (form) => {
         let ler = await userStore.login(form)
-        console.log(ler)
         return ler
     }
 
@@ -43,9 +42,7 @@ export const useUser = () => {
         return userStore.getToken()
     }
 
-    const removeToken = () => {
-        return userStore.removeToken()
-    }
+
 
     const isLogged = () => {
         return userStore.isLogged()
@@ -59,5 +56,5 @@ export const useUser = () => {
         return (await userStore.checkToken())
     }
 
-    return { login, setUser, getUser, findUsers, deleteUser, getToken, isLogged, returnStore, removeToken, logout, checkToken, update, register }
+    return { login, setUser, getUser, findUsers, deleteUser, getToken, isLogged, returnStore, logout, checkToken, update, register }
 }

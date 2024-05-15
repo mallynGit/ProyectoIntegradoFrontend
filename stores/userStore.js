@@ -20,12 +20,12 @@ export const useUserStore = defineStore('user', {
 
         async login(form) {
             try {
-                console.log('llega antes')
+                console.log('principio desde store login')
                 let p = await useAxiosInstance().post('/auth/login', form)
                 this.token = p.data.token
                 localStorage.setItem('token', p.data.token)
                 this.user = p.data.user
-                console.log(p, 'peticion')
+                // console.log(p, 'peticion')
                 return p.data
             } catch (err) {
                 console.log(err.response.status)
@@ -69,10 +69,6 @@ export const useUserStore = defineStore('user', {
             return await useAxiosInstance().delete('/user/delete/' + id)
         },
 
-        removeToken() {
-            this.token = null
-            localStorage.removeItem('token')
-        },
 
         isLogged() {
             return this.token != null
@@ -80,11 +76,12 @@ export const useUserStore = defineStore('user', {
 
         async checkToken() {
             try {
+                console.log('checking...')
                 return (await useAxiosInstance().post('/auth/check', {}, { headers: { Authorization: `Bearer ${this.token ? this.token : localStorage.getItem('token')}` } })).data
             } catch (err) {
-                console.log(err, 'checktoken fallido, borrando token...')
-                localStorage.removeItem('token')
-                this.removeToken()
+                console.log(err, 'checktoken fallido, deslogueando...')
+                this.logout()
+                
             }
         }
 

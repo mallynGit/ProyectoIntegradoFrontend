@@ -26,6 +26,18 @@ export const usePetStore = defineStore('pet', {
             return pets
         },
 
+        async getPetById(id) {
+            let pet = (await useAxiosInstance().get('/pets/get/' + id)).data[0]
+            pet.foto_perfil = env.urlApi + '/uploads/' + pet.foto_perfil._id + '.' + pet.foto_perfil.tipo
+            let multimedia = []
+            for (let pic of pet.multimedia) {
+                multimedia.push(env.urlApi + '/uploads/' + pic._id + '.' + pic.tipo)
+                // console.log(multimedia)
+            }
+            pet.multimedia = multimedia
+            return pet
+        },
+
         async createPet(form) {
             useAxiosInstance().post('/pets/createPet', form, { headers: { "Content-Type": "multipart/form-data" } }).then(res => {
                 if (env.environment == 'development') {

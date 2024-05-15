@@ -1,20 +1,21 @@
 <template>
     <ShowMedia :media="media.pet" :model-value="media.popup" @update:model-value="(v) => updatePopup(v)" />
-    <div class="cards-container q-pa-lg">
-
-        <q-card class="pet-card q-mx-sm q-my-md" v-for="pet of pets">
+    <div class="q-gutter row pet-container">
+        <q-card v-for="pet of pets" :key="pet._id"
+            class="pet-card q-mx-xs q-my-sm col-lg-auto col-md-auto col-sm-auto col-xs-12">
             <q-card-section horizontal>
                 <q-card-section>
-                    <p v-for="(k, v) of filterFields(pet)"><span class="text-h6">{{ v[0].toUpperCase() + v.slice(1) }}</span>: <span
-                            class="text-subtitle1">{{ k }}</span></p>
-                    <p><span class="text-h6">Dueño</span>: <span class="text-subtitle1">{{ pet.master.nick }}</span></p>
+                    <div class="card-content">
+                        <p v-for="(k, v) of filterFields(pet)" :key="v" class="text-h6">
+                            {{ v[0].toUpperCase() + v.slice(1) }}: <span class="text-subtitle1"><br />{{ k }}</span>
+                        </p>
+                        <p><span class="text-h6">Dueño</span>: <span class="text-subtitle1"><br />{{ pet.master.nick
+                                }}</span></p>
+                    </div>
                 </q-card-section>
-
-                <div class="col items-center row q-pa-sm">
-                    <q-img :src="pet.foto_perfil" width="100%" fit="cover" ratio=1
-                        style="border: 1px solid orangered; border-radius: 10%" />
+                <div class="col items-center row justify-center q-pa-sm">
+                    <q-img class="img" :src="pet.foto_perfil" width="100%" fit="cover" ratio=1 style="" />
                 </div>
-
             </q-card-section>
             <q-card-actions class="row justify-evenly">
                 <q-btn label="Posts" color="green"></q-btn>
@@ -24,7 +25,6 @@
         </q-card>
     </div>
 </template>
-
 
 <script setup>
 import { usePet } from '~/composables/petComposable'
@@ -47,22 +47,35 @@ function popup(pet) {
     media.value.popup = true;
     media.value.pet = pet.multimedia
 }
-
 </script>
 
 <style scoped lang="scss">
-.pet-card {
-    min-width: 250px;
+.pet-card:hover {
+    // min-width: 30%;
+    // max-width: 33%;
+    box-shadow:0px 0px 0px 1px orangered inset;
 }
 
-.cards-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 19%);
-    /* Define el tamaño de las columnas */
-    gap: 1%;
+.pet-container {
+    justify-content: space-evenly;
 }
 
-// .img-container {
-//     max-width: 100%;
-//     max-height: 200%;
-// }</style>
+@media screen and (max-width: 1420px) {}
+
+p {
+    user-select: none;
+}
+
+.card-content {
+    max-width: 125px;
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
+.img {
+    min-width: 100px;
+    max-width: 80%;
+    border: 1px solid orangered;
+    border-radius: 10%
+}
+</style>

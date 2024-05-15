@@ -33,13 +33,6 @@ const router = useRouter();
 const env = useRuntimeConfig().public
 const composable = useUser()
 
-const buttons = [
-    { icon: 'mdi-gamepad', label: 'test', path: '/test/hola', needLog: true },
-    { icon: 'mdi-account-plus', label: 'register', path: '/auth/register', needLog: false },
-    { icon: 'mdi-account-arrow-left', label: 'login', path: '/auth/login', needLog: false },
-    { icon: 'mdi-account-off', label: 'logout', path: '/auth/login', needLog: true, click: logout() },
-]
-
 store.$subscribe((mutation, state) => {
     if (state.token) {
         logueado.value = true
@@ -56,17 +49,13 @@ router.beforeEach((to, from) => {
 })
 
 async function logout() {
-    try {
-        composable.logout()
-        router.push({ path: '/auth/login' })
-    } catch (err) {
-        console.log(err)
-    }
+    composable.logout()
+    router.push({ path: '/auth/login' })
 }
 
 onMounted(async () => {
     rutaActual.value = router.currentRoute.value.path.split('/').pop()
-    logueado.value = await composable.isLogged();
+    logueado.value = composable.isLogged();
     emits('loaded', true)
 })
 

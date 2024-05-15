@@ -17,6 +17,10 @@ export const usePet = () => {
         return store.update(form);
     }
 
-    return { getPets, createPet, update }
+    const getPetById = async (id) => {
+        return store.getPetById(id)
+    }
+
+    return { getPets, createPet, update, getPetById }
 
 }

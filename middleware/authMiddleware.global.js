@@ -16,17 +16,21 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
                 const localStorageToken = localStorage.getItem('token');
 
                 if (localStorageToken != null) {
+                    console.log('localstorage not null')
                     store.token = localStorageToken;
                     check = await store.checkToken()
+                    console.log('ls not nulo, resultado es: ', check)
+                    console.log(!check.token);
                     if (!check.token) {
                         // Si el token ha caducado, cerramos la sesión y redirigimos al usuario al inicio de sesión
                         alert('La sesión ha caducado. Por favor, inicie sesión de nuevo.');
                         store.logout();
-                        console.log('llega aqui.......')
+                        console.log('check token fallido')
                         return navigateTo('/auth/login');
                     }
-                    console.log(check, 'checando')
+                    console.log(check, 'despues de checktoken')
                     if (store.user == null) {
+                        console.log('agregando user a store')
                         store.user = check.user
                     }
                     token = localStorageToken
@@ -36,11 +40,12 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
             } else {
                 token = store.token
                 check = await store.checkToken();
-                console.log(check)
+                console.log('hay token en store')
 
                 if (!check.token) {
                     // Si el token ha caducado, cerramos la sesión y redirigimos al usuario al inicio de sesión
                     alert('La sesión ha caducado. Por favor, inicie sesión de nuevo.');
+                    console.log('check en localstorage nulo fallido')
                     store.logout();
                     return navigateTo('/auth/login');
                 }
@@ -48,7 +53,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
                     store.user = check.user
                 }
             }
-            console.log(check, ' checkenado')
+            console.log('despues de if checktoken fallido (no significa que haya fallado)')
 
 
             // Verificamos los permisos según el rol de la ruta
@@ -58,7 +63,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
                     return navigateTo('/')
                 }
                 // Si aún no hemos verificado el token, lo hacemos aquí
-                check = await store.checkToken(store.token);
+                check = await store.checkToken();
 
 
 
@@ -67,7 +72,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
                     if (to.meta.role === 'admin' && userRole === 'admin') {
                         console.log(':) admin');
                     } else if (to.meta.role === 'user' && (userRole === 'user' || userRole === 'admin')) {
-                        console.log(':)');
+                        console.log(':) puede entrar');
                     } else {
                         alert('No tienes permiso para acceder a esta ruta.');
                         return navigateTo('/');

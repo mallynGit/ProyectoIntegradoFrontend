@@ -33,7 +33,7 @@ const login = async () => {
   try {
 
     let res = await userStore.login(loginForm.value);
-    console.log(res);
+    console.log(res,' desde pagina login');
 
     if (res == 404) {
       return alert("Usuario no encontrado");
