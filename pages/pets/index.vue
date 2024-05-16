@@ -14,20 +14,19 @@
                     </div>
                 </q-card-section>
                 <div class="col items-center row justify-center q-pa-sm">
-                    <q-img class="img" :src="pet.foto_perfil" width="100%" fit="cover" ratio=1 style="" />
+                    <q-img class="img" :src="apiUrl + '/uploads/' + pet.foto_perfil._id" width="100%" fit="cover"
+                        ratio=1 @click="navigateToPet(pet._id)" />
                 </div>
             </q-card-section>
-            <q-card-actions class="row justify-evenly">
-                <q-btn label="Posts" color="green"></q-btn>
-                <q-btn label="Comentarios" color="purple"></q-btn>
-                <q-btn label="Media" color="orange" @click="popup(pet)"></q-btn>
-            </q-card-actions>
+
         </q-card>
     </div>
 </template>
 
 <script setup>
 import { usePet } from '~/composables/petComposable'
+const apiUrl = useRuntimeConfig().public.urlApi
+const router = useRouter()
 
 let media = ref({ pet: [], popup: false })
 let pets = ref([])
@@ -36,6 +35,10 @@ pets.value = await usePet().getPets()
 
 function updatePopup(newValue) {
     media.value.popup = newValue;
+}
+
+function navigateToPet(id) {
+    return router.push('/pets/' + id)
 }
 
 function filterFields(item) {
@@ -53,7 +56,7 @@ function popup(pet) {
 .pet-card:hover {
     // min-width: 30%;
     // max-width: 33%;
-    box-shadow:0px 0px 0px 1px orangered inset;
+    box-shadow: 0px 0px 0px 1px orangered inset;
 }
 
 .pet-container {

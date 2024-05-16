@@ -2,7 +2,7 @@
     <q-dialog :model-value="modelValue" @update:model-value="(v) => $emit('update:modelValue', v)">
         <q-card class="card">
             <div v-show="fullscreen.show == false" class="img-container">
-                <q-img width="18%" class="q-my-sm" v-for="(m, index) of media" ratio=1 :key="index" :src="m"
+                <q-img width="18%" class="q-my-sm" v-for="(m, index) of media" ratio=1 :key="index" :src="apiUrl + '/uploads/' + m._id" alt="hola"
                     @click="fullscreenImage(m)" />
             </div>
 
@@ -13,7 +13,7 @@
         <q-card class="fullImage">
             <div class="q-pa-sm">
                 <q-btn class="return" icon="mdi-arrow-left" @click="closeFullscreen()"></q-btn>
-                <q-img :src="fullscreen.img" height="80vh" fit="contain"></q-img>
+                <q-img :src="apiUrl + '/uploads/' + fullscreen.img._id" height="80vh" fit="contain"></q-img>
             </div>
         </q-card>
     </q-dialog>
@@ -27,6 +27,8 @@ const props = defineProps({
     popup: Boolean,
     modelValue: Boolean,
 })
+const apiUrl = useRuntimeConfig().public.urlApi
+
 const fullscreen = ref({
     show: false,
     img: ''
