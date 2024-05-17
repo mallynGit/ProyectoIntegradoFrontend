@@ -32,7 +32,24 @@ export const usePetStore = defineStore('pet', {
             })
         },
 
-        async postComment(form){
+        async createPost(form) {
+            useAxiosInstance().post('/posts/createPost', form, { headers: { "Content-Type": "multipart/form-data" } }).then(res => {
+                if (env.environment == 'development') {
+                    // duplicate(form, res.data.foto_perfil)
+                }
+                return res.data
+            })
+        },
+
+        async getPetPosts(id) {
+            return (await useAxiosInstance().get('/posts/' + id)).data
+        },
+
+        async getPost(id){
+            
+        }
+
+        async postComment(form) {
             return await useAxiosInstance().post('/comments/post', form)
         },
 

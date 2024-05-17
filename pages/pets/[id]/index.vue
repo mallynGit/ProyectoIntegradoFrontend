@@ -5,6 +5,9 @@
             <span v-for="(k, v) of filterFields(pet)">{{ v }}: {{ k }}<br /></span>
             <q-img :src="apiUrl + '/uploads/' + pet.foto_perfil?._id" width="300px"></q-img>
             <q-btn label="Media" color="orange" @click="popup(pet)"></q-btn>
+            <q-btn label="Posts" color="blue" @click="useRouter().push('/pets/posts/' + pet._id)"></q-btn>
+            <q-btn v-if="pet.master._id == useUser().getUser()?._id" @click="navigateToCreatePost(pet._id)"
+                label="Crear post" color="green"></q-btn>
         </div>
 
         <q-separator />
@@ -68,13 +71,15 @@ const comentarioInput = ref(null);
 const comentario = ref(null);
 const loading = ref(true);
 
+let owner;
+
 onBeforeMount(() => {
     usePet().getPetById(id).then((res) => {
         pet.value = res;
-        console.log(res);
         sortComments();
         loading.value = false;
     });
+    owner = useUser().getUser()?._id;
 });
 
 function sortComments() {
@@ -84,6 +89,11 @@ function sortComments() {
         return dateB - dateA;
     });
 }
+
+function navigateToCreatePost(id) {
+    useRouter().push({ path: '/pets/createPost', query: { id } })
+}
+
 
 async function postComment(content) {
     console.log(paginatedComments);
