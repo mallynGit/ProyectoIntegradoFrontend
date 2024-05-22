@@ -33,6 +33,17 @@ export const usePet = () => {
         return await store.getPetPosts(id)
     }
 
-    return { getPets, createPet, update, getPetById, postComment, createPost, getPetPosts }
+    const getPost = async (id) => {
+        return await store.getPost(id)
+    }
+
+    const reply = async (form) => {
+        return await store.reply(form)
+    }
+
+    const petStore = store
+
+
+    return { getPets, createPet, update, getPetById, postComment, createPost, getPetPosts, getPost, petStore, reply }
 
 }

@@ -41,15 +41,27 @@ export const useUserStore = defineStore('user', {
             }
         },
 
-        async register(user, profilePic) {
+        async register(user, profilePic, pets) {
             console.log(user, profilePic, ' desde register')
             let formData = new FormData()
             for (let key in user) {
                 formData.append(key, user[key]);
             }
             if (profilePic) {
-                formData.append('media', profilePic);
+                console.log(profilePic.name)
+                formData.append('multi', profilePic, 'test.' + profilePic.name.split('.')[1]);
             }
+            if (pets.length > 0) {
+                let i = 1
+                for (let pet of pets) {
+                    pet.number = i
+                    formData.append('multi', pet.media, `pet${i}.${pet.media.name.split('.')[1]}`)
+                    delete pet['media']
+                    i++
+                }
+                formData.append('pets', JSON.stringify(pets))
+            }
+            // return useAxiosInstance().post('2', formData)
             return useAxiosInstance().post('/auth/register', formData, { headers: { "Content-Type": "multipart/form-data" } }).then(res => {
                 console.log(res, ' desde store regitsrer?')
                 if (useRuntimeConfig().public.environment == 'development') {
@@ -81,7 +93,7 @@ export const useUserStore = defineStore('user', {
             } catch (err) {
                 console.log(err, 'checktoken fallido, deslogueando...')
                 this.logout()
-                
+
             }
         }
 

@@ -14,8 +14,8 @@ export const useUser = () => {
         return await userStore.update(form)
     }
 
-    const register = async (user, profilePic) => {
-        return await userStore.register(user, profilePic)
+    const register = async (user, profilePic, pets) => {
+        return await userStore.register(user, profilePic, pets)
     }
 
     const returnStore = () => {

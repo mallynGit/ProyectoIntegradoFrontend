@@ -3,7 +3,7 @@
     <q-btn icon="mdi-arrow-left" @click="useRouter().back()" ></q-btn>
 
 
-    <q-card v-for="post of posts" class="post q-mx-auto q-my-md q-py-md q-px-xl">
+    <q-card v-for="post of posts" class="post q-mx-auto q-my-md q-py-md q-px-xl" @click="useRouter().push(`posts/${post._id}`)">
         <q-card-section class="text-h6 q-pb-xs">
             {{ post.titulo }}
         </q-card-section>
@@ -31,6 +31,7 @@ const posts = await usePet().getPetPosts(id)
     max-height: 300px;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
 
     &:after {
         content: '';

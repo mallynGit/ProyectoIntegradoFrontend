@@ -45,12 +45,16 @@ export const usePetStore = defineStore('pet', {
             return (await useAxiosInstance().get('/posts/' + id)).data
         },
 
-        async getPost(id){
-            
-        }
+        async getPost(id) {
+            return (await useAxiosInstance().get('/posts/post/' + id)).data
+        },
 
         async postComment(form) {
             return await useAxiosInstance().post('/comments/post', form)
+        },
+
+        async reply(form) {
+            return await useAxiosInstance().post('/comments/reply', form)
         },
 
         async update(form) {
