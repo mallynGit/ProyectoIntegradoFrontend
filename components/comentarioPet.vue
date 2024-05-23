@@ -70,7 +70,7 @@ function formatDate(timestamp) {
 }
 </script>
 
-<style lang="scss" >
+<style lang="scss" scoped>
 .comment {
     display: flex;
     flex-direction: column;

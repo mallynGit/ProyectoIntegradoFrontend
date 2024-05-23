@@ -81,6 +81,9 @@ export const useUserStore = defineStore('user', {
             return await useAxiosInstance().delete('/user/delete/' + id)
         },
 
+        async retrieveUser(){
+            return await useAxiosInstance().get('/user/find?name=' + this.user.nick)
+        },
 
         isLogged() {
             return this.token != null

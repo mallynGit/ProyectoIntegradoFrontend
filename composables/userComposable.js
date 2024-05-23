@@ -11,7 +11,9 @@ export const useUser = () => {
     }
 
     const update = async (form) => {
-        return await userStore.update(form)
+        const res = (await userStore.update(form)).data
+        userStore.user = res
+        return res
     }
 
     const register = async (user, profilePic, pets) => {
@@ -42,7 +44,9 @@ export const useUser = () => {
         return userStore.getToken()
     }
 
-
+    const retrieveUser = async () => {
+        return (await userStore.retrieveUser()).data
+    }
 
     const isLogged = () => {
         return userStore.isLogged()
@@ -56,5 +60,5 @@ export const useUser = () => {
         return (await userStore.checkToken())
     }
 
-    return { login, setUser, getUser, findUsers, deleteUser, getToken, isLogged, returnStore, logout, checkToken, update, register }
+    return { login, setUser, getUser, findUsers, deleteUser, getToken, isLogged, returnStore, logout, checkToken, update, register, retrieveUser }
 }

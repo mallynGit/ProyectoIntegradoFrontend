@@ -1,10 +1,16 @@
 <template>
 
-    <div class="text-h2 absolute-center" v-show="user.nombre && user.apellidos">Bienvenido, {{ user.nombre }} {{ user.apellidos }}!</div>
 
-    <div class="text-h5 absolute-center" v-show="user.email">Email: {{ user.email }}</div>
 
-    <q-img ratio="1" class="q-ma-lg" width="250px" :src="`http://localhost:3001/uploads/${user.profilePicture}`" />
+    <div class="text-h5 absolute-center">
+        <span v-for="(prop, index) of user">
+            {{ index }}: {{ prop }}
+            <br />
+        </span>
+        <q-img ratio="1" class="q-ma-lg" width="250px" :src="`${apiUrl}/uploads/${user._id}`" />
+    </div>
+
+    <q-btn to="/user/editProfile">Editar perfil</q-btn>
 
     <q-btn to="/pets/add-pet">Anadir mascota</q-btn>
 
@@ -13,7 +19,7 @@
 
 
 <script setup>
-
+const apiUrl = useRuntimeConfig().public.urlApi
 const user = useUser().getUser();
 
 definePageMeta({

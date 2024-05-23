@@ -67,11 +67,7 @@ const pageSize = 4; // Por ejemplo, mostrar 5 comentarios por página
 
 const totalPages = computed(() => Math.ceil(pet.value.comentarios.length / pageSize));
 
-const paginatedComments = computed(() => {
-    const startIndex = (currentPage.value - 1) * pageSize;
-    const endIndex = currentPage.value * pageSize;
-    return pet.value.comentarios.slice(startIndex, endIndex);
-});
+
 
 
 const id = useRoute().params.id;
@@ -83,6 +79,12 @@ const comentarioInput = ref(null);
 const comentario = ref(null);
 const loading = ref(true);
 
+const paginatedComments = computed(() => {
+    const startIndex = (currentPage.value - 1) * pageSize;
+    const endIndex = currentPage.value * pageSize;
+    return pet.value.comentarios.slice(startIndex, endIndex);
+});
+
 onBeforeMount(() => {
     usePet().getPetById(id).then((res) => {
         console.log(res)
@@ -93,7 +95,7 @@ onBeforeMount(() => {
 });
 
 function sortComments() {
-    pet.value.comentarios = pet.value.comentarios.sort((a, b) => {
+    pet.value.comentarios.sort((a, b) => {
         const dateA = new Date(a.timestamp);
         const dateB = new Date(b.timestamp);
         return dateB - dateA;
@@ -183,7 +185,37 @@ function formatDate(timestamp) {
     /* Alinea a la derecha */
 }
 
+.comment-header {
+    width: 100%;
+    padding: 5px 12.5px;
+    font-size: 12px;
+    background-color: rgba(0, 0, 0, 0.05);
+}
 
+.comment-body {
+    display: flex;
+    flex: 1;
+    padding: 10px;
+}
+
+.author-info {
+    width: 125px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 10px;
+    border-right: 1px solid black;
+    height: 100%;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 8px;
+    padding-bottom: 0px;
+}
 
 .author-info {
     width: 125px;
