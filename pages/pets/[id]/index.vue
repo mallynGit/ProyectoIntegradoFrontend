@@ -10,6 +10,8 @@
             <q-btn label="Posts" color="blue" @click="useRouter().push(`/pets/${pet._id}/posts`)"></q-btn>
             <q-btn v-if="pet.master._id == useUser().getUser()?._id" @click="navigateToCreatePost(pet._id)"
                 label="Crear post" color="green"></q-btn>
+                <q-btn v-if="pet.master._id == useUser().getUser()?._id" :to="pet._id + '/editProfile'"
+                label="editar perfil" color="green"></q-btn>
         </div>
 
         <q-separator />

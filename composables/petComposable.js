@@ -14,7 +14,7 @@ export const usePet = () => {
     }
 
     const update = async (form) => {
-        return store.update(form);
+        return await store.update(form);
     }
 
     const getPetById = async (id) => {
@@ -40,6 +40,7 @@ export const usePet = () => {
     const reply = async (form) => {
         return await store.reply(form)
     }
+    
 
     const petStore = store
 
