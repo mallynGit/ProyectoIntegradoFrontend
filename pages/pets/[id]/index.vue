@@ -68,7 +68,7 @@ const pageSize = 4; // Por ejemplo, mostrar 5 comentarios por página
 const totalPages = computed(() => Math.ceil(pet.value.comentarios.length / pageSize));
 
 
-
+//test
 
 const id = useRoute().params.id;
 const apiUrl = useRuntimeConfig().public.urlApi;
