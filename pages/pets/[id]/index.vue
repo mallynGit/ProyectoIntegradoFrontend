@@ -2,15 +2,18 @@
     <q-btn @click="useRouter().back()" icon="mdi-arrow-left"> </q-btn>
 
     <ShowMedia :media="media.pet" :model-value="media.popup" @update:model-value="(v) => updatePopup(v)" />
+    <ReportForm :id="report.id" :model-value="report.show" @update:model-value="(v) => report.show = v"
+        :tipo="report.tipo" />
     <div v-if="!loading" style="height: 100%" class="q-pa-sm">
         <div class="q-ma-md">
             <span v-for="(k, v) of filterFields(pet)" :key="v">{{ v }}: {{ k }}<br /></span>
             <q-img :src="apiUrl + '/uploads/' + pet.foto_perfil" width="300px"></q-img>
             <q-btn label="Media" color="orange" @click="popup(pet)"></q-btn>
             <q-btn label="Posts" color="blue" @click="useRouter().push(`/pets/${pet._id}/posts`)"></q-btn>
+            <q-btn label="report" color="red" @click="petReport()" />
             <q-btn v-if="pet.master._id == useUser().getUser()?._id" @click="navigateToCreatePost(pet._id)"
                 label="Crear post" color="green"></q-btn>
-                <q-btn v-if="pet.master._id == useUser().getUser()?._id" :to="pet._id + '/editProfile'"
+            <q-btn v-if="pet.master._id == useUser().getUser()?._id" :to="pet._id + '/editProfile'"
                 label="editar perfil" color="green"></q-btn>
         </div>
 
@@ -76,6 +79,7 @@ const id = useRoute().params.id;
 const apiUrl = useRuntimeConfig().public.urlApi;
 
 let media = ref({ pet: [], popup: false });
+let report = ref({ id: '', show: false, tipo: '' })
 const pet = ref({});
 const comentarioInput = ref(null);
 const comentario = ref(null);
@@ -113,6 +117,12 @@ function reply(reply) {
             sortComments();
         });
     })
+}
+
+function petReport(){
+    report.value.id = pet.value._id;
+    report.value.tipo = 'Mascota';
+    report.value.show = true;
 }
 
 function navigateToCreatePost(id) {

@@ -11,6 +11,7 @@
                     </q-toolbar-title>
                     <q-btn flat round dense icon="mdi-dog-side" label="Pets" to="/pets" />
                     <q-btn flat round dense icon="mdi-gamepad" label="test" to="/test/hola" />
+                    <q-btn label="reportes" to="/test/reportes" />
                     <q-btn flat round dense icon="mdi-account-plus" label="register" to="/auth/register" />
                     <q-btn flat round dense icon="mdi-account-arrow-left" label="login" to="/auth/login" />
                     <q-btn flat round dense icon="mdi-account-off" label="logout" @click="logout()" />
@@ -32,6 +33,7 @@ const store = useUserStore()
 const router = useRouter();
 const env = useRuntimeConfig().public
 const composable = useUser()
+let reportStore;
 
 store.$subscribe((mutation, state) => {
     if (state.token) {
@@ -57,7 +59,14 @@ onMounted(async () => {
     rutaActual.value = router.currentRoute.value.path.split('/').pop()
     logueado.value = composable.isLogged();
     emits('loaded', true)
+
+    if(logueado.value == true){
+        reportStore = useReportStore()
+        console.log('report store existe 🤧')
+    }
+
 })
+
 
 
 </script>

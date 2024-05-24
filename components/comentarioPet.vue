@@ -25,7 +25,7 @@
                             </span>
                             <!-- report -->
                             <span class="comment-action">
-                                <q-icon name="mdi-flag" size="16px" />
+                                <q-icon name="mdi-flag" size="16px" @click="report()" />
                                 report
                             </span>
                         </div>
@@ -52,6 +52,15 @@ const emits = defineEmits(['reply', 'deleteComment'])
 
 let replying = ref(false)
 let replyValue = ref('')
+
+function report() {
+    let form = {
+        contenido: 'mal >:(',
+        tipo: 'Comentario',
+        reportedId: props.c._id
+    }
+    useReportStore().createReport(form)
+}
 
 function reply() {
     emits('reply', { contenido: replyValue.value, id: props.c._id })
