@@ -3,6 +3,8 @@
     <q-btn icon="mdi-arrow-left" @click="useRouter().back()" ></q-btn>
 
 
+    <div v-if="posts.length == 0">No hay posts</div>
+
     <q-card v-for="post of posts" class="post q-mx-auto q-my-md q-py-md q-px-xl" @click="useRouter().push(`posts/${post._id}`)">
         <q-card-section class="text-h6 q-pb-xs">
             {{ post.titulo }}

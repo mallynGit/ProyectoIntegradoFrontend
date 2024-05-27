@@ -5,9 +5,26 @@
     <ReportForm :id="report.id" :model-value="report.show" @update:model-value="(v) => report.show = v"
         :tipo="report.tipo" />
     <div v-if="!loading" style="height: 100%" class="q-pa-sm">
+        <!-- perfil -->
         <div class="q-ma-md">
-            <span v-for="(k, v) of filterFields(pet)" :key="v">{{ v }}: {{ k }}<br /></span>
-            <q-img :src="apiUrl + '/uploads/' + pet.foto_perfil" width="300px"></q-img>
+            <div class="info row q-my-sm justify-center">
+                <!-- <span v-for="(k, v) of filterFields(pet)" :key="v">{{ v }}: {{ k }}<br /></span> -->
+                <div class="q-py-md col-auto justify-center items-center column">
+                    <q-img :src="apiUrl + '/uploads/' + pet.foto_perfil" width="250px" ratio="1"
+                        class="profile-img"></q-img>
+                </div>
+                <div class="q-pa-md col-auto justify-center column">
+                    <p class="text-h3">Nombre: {{ pet.nombre }} </p>
+                    <p class="text-h6 info-item"> <q-icon name="mdi-rhombus" />Edad: {{ pet.edad }} </p>
+                    <p class="text-h6 info-item"> <q-icon name="mdi-rhombus-outline" />Categoria: {{ pet.categoria }}</p>
+                    <p class="text-h6 info-item"> <q-icon name="mdi-rhombus" />Raza: {{ pet.raza }}</p>
+                    <p class="text-h6 info-item"> <q-icon name="mdi-rhombus-outline" />Master: {{ pet.master.nick }}</p>
+                </div>
+
+                <!--             buena idea de campos a meter    
+                <span>Peso: {{ pet.peso }}  </span>
+                <span>Sexo: {{ pet.sexo }}  </span> -->
+            </div>
             <q-btn label="Media" color="orange" @click="popup(pet)"></q-btn>
             <q-btn label="Posts" color="blue" @click="useRouter().push(`/pets/${pet._id}/posts`)"></q-btn>
             <q-btn label="report" color="red" @click="petReport()" />
@@ -33,8 +50,8 @@
 
             <div class="q-pa-sm q-mx-auto" v-for="c of paginatedComments" :key="c._id">
 
-                <comentario-pet :c="c" :pet="pet" @reply="(content) => reply(content)"
-                    :loggedIn="useUser().isLogged()" />
+                <comentario-pet :c="c" :pet="pet" @reply="(content) => reply(content)" :loggedIn="useUser().isLogged()"
+                    @report="(v) => commentReport(v)" />
 
                 <div class="replies q-mt-md">
                     <div class="reply" v-for="r of c.respuestas" :key="r.id">
@@ -119,10 +136,18 @@ function reply(reply) {
     })
 }
 
-function petReport(){
+function petReport() {
     report.value.id = pet.value._id;
     report.value.tipo = 'Mascota';
     report.value.show = true;
+    console.log(report.value, 'report desde pet!')
+}
+
+function commentReport(form) {
+    report.value.id = form.reportedId;
+    report.value.tipo = 'Comentario';
+    report.value.show = true;
+    console.log(report.value, 'report desde comment!')
 }
 
 function navigateToCreatePost(id) {
@@ -241,5 +266,17 @@ function formatDate(timestamp) {
 .content {
     flex: 1;
     padding: 10px;
+}
+
+.info {
+    border: 1px dotted chocolate;
+}
+
+.profile-img {
+    border: 1px solid black;
+    border-radius: 50%;
+}
+.info-item{
+    padding-left:25%;
 }
 </style>

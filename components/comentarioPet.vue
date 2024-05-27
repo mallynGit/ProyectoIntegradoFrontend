@@ -24,8 +24,8 @@
                                 reply
                             </span>
                             <!-- report -->
-                            <span class="comment-action">
-                                <q-icon name="mdi-flag" size="16px" @click="report()" />
+                            <span class="comment-action" @click="report()" >
+                                <q-icon name="mdi-flag" size="16px" />
                                 report
                             </span>
                         </div>
@@ -48,18 +48,17 @@ const props = defineProps({
     loggedIn: Boolean
 })
 
-const emits = defineEmits(['reply', 'deleteComment'])
+const emits = defineEmits(['reply', 'deleteComment', 'report'])
 
 let replying = ref(false)
 let replyValue = ref('')
 
 function report() {
     let form = {
-        contenido: 'mal >:(',
         tipo: 'Comentario',
         reportedId: props.c._id
     }
-    useReportStore().createReport(form)
+    emits('report', form)
 }
 
 function reply() {
