@@ -9,8 +9,11 @@
     <app-header @loaded="(loaded)=>pageLoaded=loaded"/>
     <div class="content">
       <!-- Aquí colocas tu contenido -->
+      
       <NuxtPage />
+      <footer-chat />
     </div>
+
   </div>
 </template>
 

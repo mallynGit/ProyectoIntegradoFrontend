@@ -21,7 +21,7 @@ export default defineNuxtPlugin(async () => {
                 alert('Error en la respuesta del servidor');
                 return Promise.reject(new Error('Error en la respuesta del servidor'));
             } else if (response.data.token == 'expired') {
-                useUser().logout();
+                useUserStore().logout();
                 alert('La sesión ha caducado. Por favor, inicie sesión de nuevo.');
                 useRouter().push('/auth/login');
             }
@@ -33,7 +33,7 @@ export default defineNuxtPlugin(async () => {
             // Manejo de errores de respuesta
             if (error.response && error.response.status === 401 && error.response.data.error == 'expired') {
                 // Redirigir al login si el error es 401 (no autorizado)
-                useUser().logout();
+                useUserStore().logout();
                 alert('La sesión ha caducado. Por favor, inicie sesión de nuevo.');
                 useRouter().push('/auth/login');
             } else {

@@ -1,8 +1,10 @@
 <template>
 
     <q-btn @click="useRouter().back()" icon="mdi-arrow-left"> </q-btn>
-
+    <report-form :id="postId" tipo="Post" :model-value="showReport" @update:model-value="(v) => showReport = v" />
     <div>
+        <span class="cursor-pointer" @click="showReport = true"><q-icon name="mdi-flag" /> Reportar</span>
+
 
         <h4> {{ post.titulo }}</h4>
         <div class="images">
@@ -23,6 +25,7 @@ const post = ref({})
 onBeforeMount(async () => {
     post.value = await usePet().getPost(route.params.postId)
 })
+const showReport = ref(false)
 
 const { id, postId } = route.params
 

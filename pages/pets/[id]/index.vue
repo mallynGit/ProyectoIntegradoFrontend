@@ -7,23 +7,57 @@
     <div v-if="!loading" style="height: 100%" class="q-pa-sm">
         <!-- perfil -->
         <div class="q-ma-md">
-            <div class="info row q-my-sm justify-center">
+            <div class="info row q-my-sm justify-center items-center">
                 <!-- <span v-for="(k, v) of filterFields(pet)" :key="v">{{ v }}: {{ k }}<br /></span> -->
-                <div class="q-py-md col-auto justify-center items-center column">
-                    <q-img :src="apiUrl + '/uploads/' + pet.foto_perfil" width="250px" ratio="1"
-                        class="profile-img"></q-img>
+                <div class="q-py-md col justify-center items-end column">
+                    <div class=" col-9">
+                        <q-img :src="apiUrl + '/uploads/' + pet.foto_perfil" width="250px" ratio="1"
+                            class="profile-img"></q-img>
+                    </div>
+                    <div class="col-9">
+                        <span>Master: </span>
+                        <span class="text-h6"> {{ pet.master.nick
+                            }}</span>
+                    </div>
+
                 </div>
-                <div class="q-pa-md col-auto justify-center column">
-                    <p class="text-h3">Nombre: {{ pet.nombre }} </p>
-                    <p class="text-h6 info-item"> <q-icon name="mdi-rhombus" />Edad: {{ pet.edad }} </p>
-                    <p class="text-h6 info-item"> <q-icon name="mdi-rhombus-outline" />Categoria: {{ pet.categoria }}</p>
-                    <p class="text-h6 info-item"> <q-icon name="mdi-rhombus" />Raza: {{ pet.raza }}</p>
-                    <p class="text-h6 info-item"> <q-icon name="mdi-rhombus-outline" />Master: {{ pet.master.nick }}</p>
+
+                <div class=" q-pa-md col justify-center column items-start">
+                    <div class="info-text">
+                        <p>
+                        <div> Nombre: </div>
+                        <div class="text-h5"> {{ pet.nombre }} </div>
+                        </p>
+                        <p class="text-h6 info-item">
+                        <div>Edad:</div>
+                        <div class="text-h5"> {{ pet.edad }} </div>
+                        </p>
+                        <p class="text-h6 info-item">
+                        <div>Categoria: </div>
+                        <div class="text-h5"> {{ pet.categoria
+                            }}</div>
+                        </p>
+                        <p class="text-h6 info-item">
+                        <div>Raza: </div>
+                        <div class="text-h5"> {{ pet.raza }}</div>
+                        </p>
+                        <div class="info-item row">
+                            <div class="column col">
+                                <span>Peso: </span>
+                                <span class="text-h5"> {{ pet.peso }} </span>
+                            </div>
+                            <div class="column col">
+                                <div>Sexo: </div>
+                                <div class="text-h5"> {{ pet.sexo }} </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
                 <!--             buena idea de campos a meter    
-                <span>Peso: {{ pet.peso }}  </span>
-                <span>Sexo: {{ pet.sexo }}  </span> -->
+                
+                  </div>-->
             </div>
             <q-btn label="Media" color="orange" @click="popup(pet)"></q-btn>
             <q-btn label="Posts" color="blue" @click="useRouter().push(`/pets/${pet._id}/posts`)"></q-btn>
@@ -270,13 +304,19 @@ function formatDate(timestamp) {
 
 .info {
     border: 1px dotted chocolate;
+    width: 100%;
+
+    .info-text {
+        min-width: 200px;
+    }
 }
 
 .profile-img {
     border: 1px solid black;
     border-radius: 50%;
 }
-.info-item{
-    padding-left:25%;
+
+.info-item {
+    padding-left: 25%;
 }
 </style>

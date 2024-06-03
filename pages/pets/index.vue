@@ -1,6 +1,8 @@
 <template>
     <ShowMedia :media="media.pet" :model-value="media.popup" @update:model-value="(v) => updatePopup(v)" />
-    <div class="">
+
+    <div >
+        <q-drawer v-model="media.pet">hola</q-drawer>
         <div class="q-mx-lg q-ma-sm"
             style="box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 0px 4px inset, rgba(0, 0, 0, 0.9) 0px 0px 0px 3px;">
             <q-input label="filtro" v-model="filtro" /> <q-select :options="options" v-model="selectedFilter" />

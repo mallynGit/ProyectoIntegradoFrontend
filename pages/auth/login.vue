@@ -2,10 +2,15 @@
   <div class="relative-position" style="border: 1px solid cyan; height: 100%">
     <div style="border: 2px solid blueviolet; min-height: 75%; min-width: 25%" class="absolute-center q-pa-sm">
       <q-form @submit="login">
-        <q-input class="input" v-model="loginForm.email" filled label="Nombre o email" />
+        <q-input class="input" v-model="loginForm.email" filled label="Email" />
         <q-separator />
-        <q-input class="input" v-model="loginForm.password" filled label="Contrase;a" />
-        <q-checkbox class="input" label="Recordarme" v-model="recordar" />
+        <q-input v-model="loginForm.password" filled :type="isPwd ? 'password' : 'text'" label="Contraseña"
+          class="input">
+          <template v-slot:append>
+            <q-icon :name="isPwd ? 'mdi-eye' : 'mdi-eye-off'" class="cursor-pointer" @click="isPwd = !isPwd" />
+          </template>
+        </q-input>
+        <q-checkbox class="input" label="Recordarme" v-model="recordar" color="purple" />
         <q-separator />
         <div class="button-container q-pa-md">
           <q-btn class="input" label="Login" type="submit" />
@@ -21,26 +26,37 @@ import { useUser } from '~/composables/userComposable';
 
 const userStore = useUser();
 
-let recordar = ref(false);
-
+const recordar = ref(false);
+const isPwd = ref(true)
 
 let loginForm = ref({
   email: "",
   password: "",
 });
 
+onBeforeMount(() => {
+  if(localStorage.getItem('rememberMe')) {
+    loginForm.value.email = localStorage.getItem('rememberMe')
+    recordar.value = true
+  }
+})
+
 const login = async () => {
   try {
-
     let res = await userStore.login(loginForm.value);
-    console.log(res,' desde pagina login');
 
     if (res == 404) {
       return alert("Usuario no encontrado");
-    } else if(res==401){
+    } else if (res == 401) {
       return alert("Contraseña incorrecta");
     }
-    // localStorage.setItem('token', res)
+
+    if (recordar.value == true) {
+      localStorage.setItem('rememberMe', loginForm.value.email)
+    } else {
+      localStorage.removeItem('rememberMe')
+    }
+
     alert("Login correcto");
     router.push({ path: '/user/profile' })
   } catch (err) {
