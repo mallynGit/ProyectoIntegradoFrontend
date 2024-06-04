@@ -19,7 +19,7 @@
                 <q-chat-message :name="transformUIDToNick(item.autor, openChat)" :text="[item.contenido]"
                   :sent="transformUIDToNick(item.autor, openChat) == useUser().getUser().nick">
                   <template v-slot:avatar>
-                    <q-img :src="`http://localhost:3001/uploads/${item.autor}`" ratio="1" height="35px" width="35px"
+                    <q-img :src="`${apiUrl}/uploads/${item.autor}`" ratio="1" height="35px" width="35px"
                       :class="`q-m${transformUIDToNick(item.autor, openChat) == useUser().getUser().nick ? 'l' : 'r'}-md`
                         "></q-img>
                   </template>
@@ -59,7 +59,7 @@
 
                 <q-item-section avatar>
                   <q-img ratio="1" width="50px"
-                    :src="`http://localhost:3001/uploads/${v.participantes.filter(i => i._id != useUser().getUser()._id)[0]._id}`" />
+                    :src="`${apiUrl}/uploads/${v.participantes.filter(i => i._id != useUser().getUser()._id)[0]._id}`" />
                 </q-item-section>
 
                 <q-item-section>{{
@@ -86,6 +86,7 @@
 
 <script setup>
 import { ref } from 'vue';
+const urlApi = useRuntimeConfig().public.urlApi
 
 const retrieved = await useUser().getChats()
 
