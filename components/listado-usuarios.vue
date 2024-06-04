@@ -46,7 +46,7 @@ const filteredUsers = computed(() => {
     return fil
 })
 
-const startChat = (userId) => {
+const startChat = async (userId) => {
     useUser().createChat(userId).then(async res => {
         console.log(await useUser().getChats(), 'WTF')
         console.log(res, 'creado chat!')

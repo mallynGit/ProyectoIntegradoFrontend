@@ -106,7 +106,7 @@ const openUserList = ref(false)
 const scrollChat = ref()
 
 function loguear(e){
-  console.log(' QUE MIERDAS PASA')
+  console.log(' QUE MIERDAS PASA', e)
   console.log('que cojones pasa tio', useUserStore().chats, useUserStore().chats.filter(c => c._id == e)[0], 'veamos a puto ver')
 }
 
@@ -147,7 +147,7 @@ watch(openChat, (old) => {
   } else {
 
     if (!sockets.value[openChat.value._id]) {
-      let newSocket = new WebSocket('ws://localhost:4000', openChat.value._id);
+      let newSocket = new WebSocket(useRuntimeConfig().public.wsUrl, openChat.value._id);
 
       newSocket.onopen = () => {
         newSocket.send(JSON.stringify({ id: openChat.value._id }))

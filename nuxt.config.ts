@@ -4,7 +4,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       urlApi: process.env.URL_API,
-      environment: process.env.ENV
+      environment: process.env.ENV,
+      wsUrl: process.env.WS_URL
     }
   },
   quasar: {
