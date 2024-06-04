@@ -15,12 +15,12 @@
             <q-virtual-scroll :items="openChat.mensajes" class="scr" v-slot="{ item, index }" ref="scrollChat">
 
               <q-item
-                :class="`row no-wrap items-center justify${transformUIDToNick(item.autor, openChat) == useUser().getUser().nick ? '-end' : '-start'}`">
+                :class="`row no-wrap items-center justify${transformUIDToNick(item.autor, openChat) == useUser().getUser().nick ? '-start' : '-end'}`">
                 <q-chat-message :name="transformUIDToNick(item.autor, openChat)" :text="[item.contenido]"
-                  :sent="transformUIDToNick(item.autor, openChat) == useUser().getUser().nick">
+                  :sent="transformUIDToNick(item.autor, openChat) != useUser().getUser().nick">
                   <template v-slot:avatar>
                     <q-img :src="`${apiUrl}/uploads/${item.autor}`" ratio="1" height="35px" width="35px"
-                      :class="`q-m${transformUIDToNick(item.autor, openChat) == useUser().getUser().nick ? 'l' : 'r'}-md`
+                      :class="`q-m${transformUIDToNick(item.autor, openChat) == useUser().getUser().nick ? 'r' : 'l'}-md`
                         "></q-img>
                   </template>
                 </q-chat-message>
@@ -63,7 +63,8 @@
                 </q-item-section>
 
                 <q-item-section>{{
-                  v.participantes.filter(i => i._id != useUser().getUser()._id)[0].nick }}</q-item-section>
+                  v.participantes.filter(i => i._id != useUser().getUser()._id)[0].nick }}
+                  </q-item-section>
 
               </q-item>
             </q-list>
@@ -186,7 +187,7 @@ socket.onmessage = (e) => {
   position: fixed;
   bottom: 0;
   right: 0;
-  width: 625px;
+  width: 60%;
   max-height: 50%;
   // height: 100%;
   // border: 1px solid cyan;
@@ -196,6 +197,7 @@ socket.onmessage = (e) => {
   .chat {
     position: relative;
     max-height: 100%;
+    width: 40%;
     height: 100%;
     border: 1px solid goldenrod;
 
@@ -236,6 +238,7 @@ socket.onmessage = (e) => {
   .chats {
     position: relative;
     max-height: 50vh;
+    width: 35%;
     // overflow-y: scroll;
     height: 100%;
     // border: 1px solid goldenrod;
