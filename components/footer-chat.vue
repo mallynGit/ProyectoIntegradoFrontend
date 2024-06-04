@@ -86,7 +86,7 @@
 
 <script setup>
 import { ref } from 'vue';
-const urlApi = useRuntimeConfig().public.urlApi
+const apiUrl = useRuntimeConfig().public.urlApi
 
 const retrieved = await useUser().getChats()
 
