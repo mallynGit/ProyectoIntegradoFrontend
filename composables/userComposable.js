@@ -1,64 +1,94 @@
-import { useUserStore } from '~/stores/userStore.js'
+import { useUserStore } from "~/stores/userStore.js";
 
 export const useUser = () => {
+  const pinia = usePinia();
+  const userStore = useUserStore(pinia);
 
-    const pinia = usePinia();
-    const userStore = useUserStore(pinia)
+  const login = async (form) => {
+    let ler = await userStore.login(form);
+    return ler;
+  };
 
-    const login = async (form) => {
-        let ler = await userStore.login(form)
-        return ler
-    }
+  const getChats = async () => {
+    return await userStore.getChats();
+  };
 
-    const update = async (form) => {
-        const res = (await userStore.update(form)).data
-        userStore.user = res
-        return res
-    }
+  const sendMessage = async (msg) => {
+    return await userStore.sendMessage(msg);
+  };
 
-    const register = async (user, profilePic, pets) => {
-        return await userStore.register(user, profilePic, pets)
-    }
+  const update = async (form) => {
+    const res = (await userStore.update(form)).data;
+    userStore.user = res;
+    return res;
+  };
 
-    const returnStore = () => {
-        return userStore
-    }
+  const createChat = async (uid) => {
+    let returned = await userStore.createChat(uid);
+    // getChats();
+    return returned;
+  };
 
-    const setUser = (user) => {
-        userStore.setUser(user)
-    }
+  const register = async (user, profilePic, pets) => {
+    return await userStore.register(user, profilePic, pets);
+  };
 
-    const getUser = () => {
-        return userStore.user
-    }
+  const returnStore = () => {
+    return userStore;
+  };
 
-    const findUsers = async () => {
-        return (await userStore.findUsers()).data
-    }
+  const setUser = (user) => {
+    userStore.setUser(user);
+  };
 
-    const deleteUser = async (id) => {
-        return (await userStore.deleteUser(id)).data
-    }
+  const getUser = () => {
+    return userStore.user;
+  };
 
-    const getToken = () => {
-        return userStore.getToken()
-    }
+  const findUsers = async () => {
+    return (await userStore.findUsers()).data;
+  };
 
-    const retrieveUser = async () => {
-        return (await userStore.retrieveUser()).data
-    }
+  const deleteUser = async (id) => {
+    return (await userStore.deleteUser(id)).data;
+  };
 
-    const isLogged = () => {
-        return userStore.isLogged()
-    }
+  const getToken = () => {
+    return userStore.getToken();
+  };
 
-    const logout = () => {
-        return userStore.logout()
-    }
+  const retrieveUser = async () => {
+    return (await userStore.retrieveUser()).data;
+  };
 
-    const checkToken = async () => {
-        return (await userStore.checkToken())
-    }
+  const isLogged = () => {
+    return userStore.isLogged();
+  };
 
-    return { login, setUser, getUser, findUsers, deleteUser, getToken, isLogged, returnStore, logout, checkToken, update, register, retrieveUser }
-}
+  const logout = () => {
+    return userStore.logout();
+  };
+
+  const checkToken = async () => {
+    return await userStore.checkToken();
+  };
+
+  return {
+    login,
+    getChats,
+    sendMessage,
+    setUser,
+    getUser,
+    createChat,
+    findUsers,
+    deleteUser,
+    getToken,
+    isLogged,
+    returnStore,
+    logout,
+    checkToken,
+    update,
+    register,
+    retrieveUser,
+  };
+};

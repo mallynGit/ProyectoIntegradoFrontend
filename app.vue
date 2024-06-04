@@ -11,7 +11,7 @@
       <!-- Aquí colocas tu contenido -->
       
       <NuxtPage />
-      <footer-chat />
+      <footer-chat v-if="useUser().isLogged()" />
     </div>
 
   </div>

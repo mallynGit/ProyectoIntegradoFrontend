@@ -1,23 +1,37 @@
 <template>
-  <div class="footer row justify-end">
-
+  <div class="footer row justify-end items-end">
+    <listado-usuarios v-if="openUserList" v-model="openUserList" @update:model-value="(e) => r(e)"
+      @opened="(e) => r(e)" />
     <div class="q-pa-sm col-6 chat" v-if="openChat != null">
       <q-expansion-item class="conversation" :label="'Chat ' + openChat" default-opened>
         <template v-slot:header>
           <div class="chat-header">
-            Chat {{ openChat.id }}
+            {{ openChat.participantes.filter(i => i._id != useUser().getUser()._id)[0].nick }}
           </div>
         </template>
 
         <template v-slot:default>
           <div class="chat-content">
-            <q-virtual-scroll :items="openChat.msg" class="q-pa-sm scr" v-slot="{ item, index }">
+            <q-virtual-scroll :items="openChat.mensajes" class="scr" v-slot="{ item, index }" ref="scrollChat">
 
-              <q-chat-message :name="item.autor" :text="[item.content]" :sent="item.autor == 'admin'"></q-chat-message>
+              <q-item
+                :class="`row no-wrap items-center justify${transformUIDToNick(item.autor, openChat) == useUser().getUser().nick ? '-end' : '-start'}`">
+                <q-chat-message :name="transformUIDToNick(item.autor, openChat)" :text="[item.contenido]"
+                  :sent="transformUIDToNick(item.autor, openChat) == useUser().getUser().nick">
+                  <template v-slot:avatar>
+                    <q-img :src="`http://localhost:3001/uploads/${item.autor}`" ratio="1" height="35px" width="35px"
+                      :class="`q-m${transformUIDToNick(item.autor, openChat) == useUser().getUser().nick ? 'l' : 'r'}-md`
+                        "></q-img>
+                  </template>
+                </q-chat-message>
+              </q-item>
+
+
+
 
             </q-virtual-scroll>
             <q-separator />
-            <div class="chat-input self-center ">
+            <div class="chat-input self-center">
               <form @submit.prevent="testeo">
                 <q-input type="text" placeholder="Escribe mensaje" dense v-model="newMessage"></q-input>
               </form>
@@ -40,12 +54,22 @@
 
         <template v-slot:default>
           <div class="q-py-sm q-pl-sm q-pr-lg cvs">
-            <q-list separator style="border: 1px solid red; max-height: 40vh; overflow-y: scroll; width: 100%;">
-              <q-item clickable v-ripple v-for="v of chats" :key="v.id" @click="openChat = v">Chat {{ v.id }}</q-item>
+            <q-list separator class="chat-list">
+              <q-item clickable v-ripple v-for="v of useUserStore().chats" :key="v._id" @click="openChat = v">
+
+                <q-item-section avatar>
+                  <q-img ratio="1" width="50px"
+                    :src="`http://localhost:3001/uploads/${v.participantes.filter(i => i._id != useUser().getUser()._id)[0]._id}`" />
+                </q-item-section>
+
+                <q-item-section>{{
+                  v.participantes.filter(i => i._id != useUser().getUser()._id)[0].nick }}</q-item-section>
+
+              </q-item>
             </q-list>
           </div>
 
-          <q-btn class="new-chat" style="background-color: green;">
+          <q-btn class="new-chat" color="green" @click="openUserList = true">
             <q-icon name="mdi-chat-plus">
 
             </q-icon>
@@ -63,45 +87,48 @@
 <script setup>
 import { ref } from 'vue';
 
-const items = ref([
-  { autor: 'admin', content: 'Mensaje 1' },
-  { autor: 'miguel', content: 'Mensaje 2' },
-  { autor: 'admin', content: 'Mensaje 33132121212131312312313131312332132131' },
-  { autor: 'miguel', content: 'Mensaje 4' },
-  { autor: 'miguel', content: 'Mensaje 5' },
-  { autor: 'miguel', content: 'Mensaje 6' },
-  { autor: 'admin', content: 'Mensaje 7' },
-  { autor: 'admin', content: 'Mensaje 8' }
-]);
+const retrieved = await useUser().getChats()
+
+
+onMounted(() => {
+  console.log(useUserStore().chats, 'ibiien joder')
+})
+
 
 const socket = new WebSocket('ws://localhost:4000');
 const openChat = ref(null);
 const newMessage = ref('')
 const sockets = ref([])
-const chats = ref({
-  'e326': {
-    id: 'e326', msg: [
-      { autor: 'admin', content: 'Hola' },
-      { autor: 'miguel', content: 'Hola' },
-      { autor: 'admin', content: 'Adios' },
-    ]
-  },
-  'a980': {
-    id: 'a980', msg: [
-      { autor: 'admin', content: '123' },
-      { autor: 'miguel', content: '321' },
-      { autor: 'admin', content: '456' },
-    ]
-  }
-})
+const chats = ref(useUserStore().chats)
+const openUserList = ref(false)
+const scrollChat = ref()
 
+function loguear(e){
+  console.log(' QUE MIERDAS PASA')
+  console.log('que cojones pasa tio', useUserStore().chats, useUserStore().chats.filter(c => c._id == e)[0], 'veamos a puto ver')
+}
 
+function r(e) {
+  console.log('que cojones pasa tio', useUserStore().chats, useUserStore().chats.filter(c => c._id == e)[0], 'veamos a puto ver')
+  loguear(e)
+  // useUser().getChats().then((res) => {
+  //   // openChat.value = useUserStore().chats.filter(c => c._id == e)[0]
+  //   console.log(openChat.value, useUserStore().chats, res, ' veamos a puto ver')
+  // })
 
-function testeo() {
-  console.log(chats.value, openChat.value.id, chats[openChat.value.id], chats.value)
+}
+
+function transformUIDToNick(uid, chat) {
+  return chat.participantes.filter(p => p._id == uid)[0].nick
+}
+
+async function testeo() {
+  console.log(chats.value, openChat.value._id, chats[openChat.value.id], chats.value)
+  // openChat.value.mensajes.push({ autor: useUser().getUser()._id, contenido: newMessage.value })
+  await useUser().sendMessage({ autor: useUser().getUser()._id, content: newMessage.value, id: openChat.value._id })
   // chats.value[openChat.value.id].msg.push({ autor: 'admin', content: newMessage.value })
   // socket.send(JSON.stringify({ autor: 'admin', content: newMessage.value }))
-  sockets.value[openChat.value.id].send(JSON.stringify({ autor: 'admin', content: newMessage.value, id: openChat.value.id }))
+  // sockets.value[openChat.value.id].send(JSON.stringify({ autor: 'admin', content: newMessage.value, id: openChat.value.id }))
   newMessage.value = ''
 
   console.log('vien', sockets.value, openChat.value, chats.value)
@@ -111,27 +138,36 @@ socket.onopen = () => {
   console.log('Conectado');
 };
 
-watch(openChat, (x) => {
+watch(openChat, (old) => {
+  console.log(openChat.value, 'cambiante')
   if (openChat.value == null) {
     return;
   } else {
-    if (!sockets.value[openChat.value.id]) {
-      let newSocket = new WebSocket('ws://localhost:4000', openChat.value.id);
-      
+
+    if (!sockets.value[openChat.value._id]) {
+      let newSocket = new WebSocket('ws://localhost:4000', openChat.value._id);
+
       newSocket.onopen = () => {
-        newSocket.send(JSON.stringify({ id: openChat.value.id }))
-      }
-      newSocket.onmessage = (e) => {
-        console.log(e.data, 'epa!!');
-        let data = JSON.parse(e.data)
-        chats.value[data.id].msg.push(data)
-        // openChat.value.msg.push(JSON.parse(e.data))
+        newSocket.send(JSON.stringify({ id: openChat.value._id }))
       }
 
-      sockets.value[openChat.value.id] = newSocket
+      newSocket.onmessage = async (e) => {
+        let data = JSON.parse(e.data);
+        useUserStore().chats.filter(c => c._id == data.id)[0].mensajes.push({ autor: data.autor, contenido: data.content })
+
+
+      };
+
+
+      sockets.value[openChat.value._id] = newSocket
     }
   }
+  nextTick(() => {
+    scrollChat.value.scrollTo(useUserStore().chats.filter(c => c._id == openChat.value._id)[0].mensajes.length)
+  })
 })
+
+
 
 socket.onmessage = (e) => {
   console.log(e.data);
@@ -187,7 +223,7 @@ socket.onmessage = (e) => {
       border: 1px solid red;
 
       .scr {
-        // min-height: 37.5vh;
+        min-height: 37.5vh;
         max-height: 37.5vh;
         height: 100%;
       }
@@ -203,8 +239,18 @@ socket.onmessage = (e) => {
     height: 100%;
     // border: 1px solid goldenrod;
 
+    .chat-list {
+      border: 1px solid red;
+      max-height: 40vh;
+      min-height: 40vh;
+      overflow-y: auto;
+      width: 100%;
+    }
+
     .cvs {
       max-height: 42vh;
+      min-height: 42vh;
+
       width: 100%;
     }
 

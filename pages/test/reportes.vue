@@ -20,7 +20,8 @@
                 <q-td>{{ props.row.tipo }}</q-td>
                 <q-td>{{ new Date(props.row.timestamp).toLocaleString('es-ES', { timeZone: 'Europe/Madrid' }) }}</q-td>
                 <q-td><q-btn label="Ver" @click="showItem(props.row, props.row.tipo)" /></q-td>
-                <q-td><q-checkbox v-model="props.row.resuelto" @click="updateResuelto(props.row._id)" color="purple" /></q-td>
+                <q-td><q-checkbox v-model="props.row.resuelto" @click="updateResuelto(props.row._id)"
+                        color="purple" /></q-td>
             </q-tr>
         </template>
     </q-table>
