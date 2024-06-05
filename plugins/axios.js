@@ -9,6 +9,7 @@ export default defineNuxtPlugin(async () => {
         baseURL: urlApi,
         headers: {
             "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
         }
     });
 
