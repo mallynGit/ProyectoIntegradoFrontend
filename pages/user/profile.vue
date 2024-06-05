@@ -16,6 +16,7 @@
 
     <q-btn @click="send"> JODER YA</q-btn>
     <q-btn @click="clo">vamos</q-btn>
+    <q-btn @click="conne">conectar </q-btn>
 </template>
 
 
@@ -23,15 +24,17 @@
 <script setup>
 import io from "socket.io-client"
 
-const socket = io("http://localhost:3001", { protocol: 'help' })
+const socket = io(useRuntimeConfig().public.wsUrl)
 function send() {
     socket.send({ id: '2', contenido: 'JODER YA' })
 }
 
+function conne(){
+    socket.connect()
+}
+
 function clo(){
     socket.close()
-    socket.removeAllListeners()
-    socket.connect()
 }
 
 socket.on('connect', () => {
