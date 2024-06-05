@@ -148,7 +148,9 @@ watch(openChat, (old) => {
 
     if (!sockets.value[openChat.value._id]) {
       let newSocket = new WebSocket(useRuntimeConfig().public.wsUrl, openChat.value._id);
-
+      newSocket.onerror = (e) => {
+        console.log(e, 'ERROR CATASTROFICO');
+      }
       newSocket.onopen = () => {
         newSocket.send(JSON.stringify({ id: openChat.value._id }))
       }
