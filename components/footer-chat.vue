@@ -147,7 +147,7 @@ watch(openChat, (old) => {
   } else {
 
     if (!sockets.value[openChat.value._id]) {
-      let newSocket = new WebSocket(useRuntimeConfig().public.wsUrl, openChat.value._id);
+      let newSocket = new WebSocket('wss://bondpetapi.duckdns.org');
       newSocket.onerror = (e) => {
         console.log(e, 'ERROR CATASTROFICO');
       }
