@@ -18,6 +18,10 @@ export const usePetStore = defineStore('pet', {
             return pets
         },
 
+        async getUserPets(id){
+            return (await useAxiosInstance().get('/user/getUserPets/' + id)).data
+        },
+
         async getPetById(id) {
             let pet = (await useAxiosInstance().get('/pets/get/' + id)).data[0]
 

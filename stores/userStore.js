@@ -15,7 +15,10 @@ export const useUserStore = defineStore("user", {
 
     logout() {
       localStorage.removeItem("token");
+      this.user = null;
       this.$reset();
+      this.user = null;
+      this.token = null;
     },
 
     async sendMessage(message) {

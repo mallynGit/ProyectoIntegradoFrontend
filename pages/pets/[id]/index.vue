@@ -159,7 +159,6 @@ function formatDate(timestamp) {
 </script>
 
 <style scoped lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
 
 .container {
     background-color: #e9c9ab7a;

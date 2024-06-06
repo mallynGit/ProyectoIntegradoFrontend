@@ -1,5 +1,5 @@
 <template>
-  <div class="footer row justify-end items-end">
+  <div class="footer row justify-end items-end" v-if="useUser().isLogged">
     <listado-usuarios v-if="openUserList" v-model="openUserList" @update:model-value="(e) => r(e)"
       @opened="(e) => r(e)" />
     <div class="q-pa-sm col-6 chat" v-if="openChat != null">

@@ -166,6 +166,8 @@ const emits = defineEmits(['report', 'showMedia'])
 </script>
 
 <style scoped lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+
 .info {
     border: 3px solid chocolate;
     border-radius: 7.5%;

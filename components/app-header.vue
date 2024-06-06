@@ -1,6 +1,6 @@
 <template>
-    <div class="header">
-        <q-layout view="lHh lpr lfr" container style="height: 6vh; width:100%;">
+    <div class="header q-pb-sm">
+        <q-layout view="lHh lpr lfr" container style="height: 6.25vh; width:100%;">
             <q-header>
                 <q-toolbar class="tb">
                     <q-toolbar-title style="display: flex; vertical-align: middle;">
