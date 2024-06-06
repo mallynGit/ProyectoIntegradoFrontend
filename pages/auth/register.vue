@@ -2,12 +2,29 @@
     <div class="errors text-center q-mt-sm q-pa-sm q-mx-auto" v-show="errors.length > 0">
         <span v-for="error in errors" :key="error">{{ error }} <br /></span>
     </div>
-    <div class="relative-position row" style="border: 1px solid cyan; height:90%;">
-        <div style="border: 2px solid blueviolet; min-height: 75%; width: 33vw"
-            class="vertical-middle  q-mx-auto q-mt-md q-pa-sm">
-            <q-form @submit="register">
-                <q-input v-for="(field, name) in registerForm" :label="name" :key="name" required filled
-                    v-model="registerForm[name]" @change="validate" class="q-my-sm" />
+    <div class="relative-position row container">
+        <div style="width: 33vw" class="vertical-middle  q-mx-auto q-mt-md q-pa-sm">
+            <q-form @submit="register" class="container-register">
+                <div v-for="(field, name) in registerForm" :key="name">
+                    <q-input :label="name" required filled v-model="registerForm[name]" @change="validate"
+                        v-if="typeof field != 'object'" class="q-my-sm">
+                        <template v-slot:label>
+                            <div class="text-capitalize">{{ name }}</div>
+                        </template>
+
+                    </q-input>
+                    <q-input v-else :label="name" required filled v-model="registerForm[name].input" @change="validate"
+                        class="q-my-sm"
+                        :type="field.type"
+                        >
+                        <template v-slot:label>
+                            <div class="text-capitalize">{{ name }}</div>
+                        </template>
+                        <template v-slot:append>
+                            <q-icon :name="field.type == 'password' ? 'mdi-eye' : 'mdi-eye-off'" class="cursor-pointer" @click="field.type = field.type == 'password' ? 'text' : 'password'" />
+                        </template>
+                    </q-input>
+                </div>
                 <q-file v-model="profilePic" label="Foto de perfil" class="q-my-sm"></q-file>
                 <q-separator />
                 <div class="button-container q-pa-md">
@@ -19,12 +36,11 @@
             </q-form>
         </div>
 
-        <div v-if="mascotas.length > 0" class="registermascotas vertical-middle  q-mx-auto q-mt-md q-pa-sm"
-            style="border: 2px solid blueviolet; width: 33vw; min-height: 75%;">
+        <div v-if="mascotas.length > 0" class="registermascotas q-mx-auto q-mt-md q-pa-sm">
             <div v-for="(m, i) in mascotas" :key="i" class="q-pa-md">
                 <template v-for="(field, name) in m">
-                    <q-input v-if="name != 'media'" :label="name" :key="name" v-model="m[name]" required filled
-                        class="q-py-xs" />
+                    <q-input v-if="name != 'media'" :label="name.slice(0, 1).toUpperCase() + name.slice(1)" :key="name"
+                        v-model="m[name]" required filled class="q-py-xs" />
                     <q-file v-if="name == 'media'" label="Foto de perfil" v-model="m.media" class="q-py-xs"></q-file>
                 </template>
                 <q-btn label="borrar" @click="mascotas.splice(i, 1)" />
@@ -50,8 +66,8 @@ let registerForm = ref({
     email: "",
     nombre: "",
     apellidos: "",
-    password: "",
-    repeatPassword: "",
+    password: { input: '', type: 'password' },
+    'repeat password': { input: '', type: 'password' },
 });
 
 let profilePic = ref(null)
@@ -79,9 +95,9 @@ const validate = () => {
     let form = registerForm.value;
     if (form.password.length < 8) {
         errors.value.push('La contraseña debe tener al menos 8 caracteres');
-    } else if (/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^\w\d\s])[A-Za-z\d\W]{8,}$/.test(form.password) == false) {
+    } else if (/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^\w\d\s])[A-Za-z\d\W]{8,}$/.test(form.password.input) == false) {
         errors.value.push('La contraseña debe contener al menos una mayúscula, una minúscula, un número y un caracter especial');
-    } else if (form.password !== form.repeatPassword) {
+    } else if (form.password.input !== form['repeat password'].input) {
         errors.value.push('Las contraseñas deben coincidir');
     }
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(form.email) == false) {
@@ -114,6 +130,23 @@ const register = async () => {
 </script>
 
 <style scoped lang="scss">
+.container {
+    height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 40vh;
+}
+
+.container-register {
+    border: 1px solid white;
+    padding: 1em;
+    border-radius: 8px;
+    box-shadow: rgb(223, 125, 46) 0px 5px 10px 4px;
+    margin-top: 3em;
+    background-color: #fff4ea;
+
+}
+
 .button-container {
     display: flex;
     align-items: center;
@@ -131,7 +164,13 @@ const register = async () => {
 
 .registermascotas {
     transition: 0.5s;
-    height: 98%;
     overflow-y: auto;
+    width: 33vw;
+    // max-height: 50vh;
+    border-radius: 8px;
+    box-shadow: rgb(223, 125, 46) 0px 5px 10px 4px;
+    // min-height: 100px;
+    height: 62vh;
+    margin-top: 5em;
 }
 </style>

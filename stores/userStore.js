@@ -32,7 +32,9 @@ export const useUserStore = defineStore("user", {
     },
 
     async getChats() {
-      let chats = (await useAxiosInstance().get("/chat/getAll")).data;
+      let chats = (
+        await useAxiosInstance().get("/chat/getAll?id=" + this.user._id)
+      ).data;
       this.chats = chats;
       return chats;
     },

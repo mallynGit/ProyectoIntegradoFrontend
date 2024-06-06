@@ -1,0 +1,284 @@
+<template>
+    <div class="q-ma-sm">
+        <div class="info row q-my-sm justify-center items-center">
+            <div class="q-py-md col justify-center items-center column container-image">
+                <div>
+                    <div class="edit">
+                        <q-btn flat round v-if="!editar" @click="editar = !editar">
+                            <q-icon name="mdi-pencil"></q-icon>
+                        </q-btn>
+                        <div v-else>
+                            <q-btn flat round @click="saveChanges()">
+                                <q-icon name="mdi-check"></q-icon>
+                            </q-btn>
+                            <q-btn flat round @click="restoreDefaultValues()">
+                                <q-icon name="mdi-close"></q-icon>
+                            </q-btn>
+                        </div>
+                    </div>
+
+                    <q-img :src="profilePic" width="250px" ratio="1" :class="`profile-img ${editar ? 'img-edit' : ''}`"
+                        @click="editar ? triggerFileInput() : ''">
+                    </q-img>
+                    <input type="file" ref="fileInput" style="display: none" @change="handleFileUpload" />
+                </div>
+                <p><strong>Master:</strong> {{ petRef.master.nick }}</p>
+            </div>
+            <div class="q-pa-md col justify-center column items-start">
+                <div class="info-text">
+                    <div>
+                        <span class="text-weight-bold">Nombre: </span>
+                        <span v-if="!editar">{{ petRef.nombre }}</span>
+                        <q-input dense v-else v-model="snapshot.nombre" />
+                    </div>
+                    <div>
+                        <span class="text-weight-bold">Edad: </span>
+                        <span v-if="!editar">{{ petRef.edad }}</span>
+                        <q-input dense v-else v-model="snapshot.edad" />
+                    </div>
+                    <div>
+                        <span class="text-weight-bold">Categoria: </span>
+                        <span v-if="!editar">{{ petRef.categoria }}</span>
+                        <q-input dense v-else v-model="snapshot.categoria" />
+                    </div>
+                    <div>
+                        <span class="text-weight-bold">Raza: </span>
+                        <span v-if="!editar">{{ petRef.raza }}</span>
+                        <q-input dense v-else v-model="snapshot.raza" />
+                    </div>
+                    <div>
+                        <span class="text-weight-bold">Peso: </span>
+                        <span v-if="!editar">{{ petRef.peso ? petRef.peso : 0 }}KG</span>
+                        <q-input dense type="number" v-else v-model="snapshot.peso">
+                            <template v-slot:append>
+                                KG
+                            </template>
+                        </q-input>
+                    </div>
+                    <div>
+                        <span class="text-weight-bold">Sexo: </span>
+                        <span v-if="!editar">{{ petRef.sexo }}</span>
+                        <div v-else>
+                            <q-option-group :options="sexOptions" dense v-model="snapshot.sexo" value="H" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-buttons" v-if="!report">
+            <q-btn class="button" label="Media" color="orange" @click="popup(petRef)"></q-btn>
+            <q-btn class="button" label="Posts" color="blue"
+                @click="useRouter().push(`/pets/${petRef._id}/posts`)"></q-btn>
+            <q-btn class="button" label="report" color="red" @click="petReport()" />
+            <q-btn class="button" v-if="petRef.master._id == useUser().getUser()?._id"
+                @click="navigateToCreatePost(petRef._id)" label="Crear post" color="green"></q-btn>
+
+        </div>
+    </div>
+</template>
+
+<script setup>
+const apiUrl = useRuntimeConfig().public.urlApi
+
+const props = defineProps({
+    pet: Object,
+    report: Boolean,
+    editar: Boolean
+})
+
+const petRef = ref(props.pet)
+const snapshot = ref(undefined)
+const profilePic = ref(apiUrl + '/uploads/' + props.pet.foto_perfil)
+const uploadedProfilePic = ref(null)
+const editar = ref(false)
+const fileInput = ref(null)
+
+watch(editar, (x) => {
+    if (!x) {
+        snapshot.value = undefined
+    } else {
+        snapshot.value = JSON.parse(JSON.stringify(petRef.value))
+    }
+})
+
+const sexOptions = [{
+    label: 'Hembra',
+    value: 'Hembra'
+},
+{
+    label: 'Macho',
+    value: 'Macho'
+}]
+
+function saveChanges() {
+    const formData = new FormData()
+    if (uploadedProfilePic.value) {
+        formData.append('foto_perfil', uploadedProfilePic.value, petRef.value._id
+
+        )
+        fetch('localhost', {
+            method: 'POST',
+            body: formData
+        })
+    }
+    console.log(snapshot.value, uploadedProfilePic.value, 'saving')
+
+    petRef.value = snapshot.value
+    editar.value = false
+}
+
+function restoreDefaultValues() {
+    snapshot.value = undefined
+    profilePic.value = apiUrl + '/uploads/' + props.pet.foto_perfil
+    editar.value = false
+}
+
+function petReport() {
+    emits('report')
+}
+
+function popup() {
+    emits('showMedia')
+}
+
+function navigateToCreatePost(id) {
+    useRouter().push({ path: '/pets/createPost', query: { id } })
+}
+
+function triggerFileInput() {
+    fileInput.value.click()
+}
+
+function handleFileUpload(event) {
+    const file = event.target.files[0]
+    uploadedProfilePic.value = file
+    if (file) {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+            profilePic.value = e.target.result
+        }
+        reader.readAsDataURL(file)
+    }
+}
+
+const emits = defineEmits(['report', 'showMedia'])
+
+</script>
+
+<style scoped lang="scss">
+.info {
+    border: 3px solid chocolate;
+    border-radius: 7.5%;
+    background-color: rgba(244, 234, 225, 0.847);
+    width: 50%;
+    min-height: 450px;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    font-family: 'Varela Round', sans-serif;
+
+    .info-text {
+        margin-left: 1em;
+        min-width: 200px;
+        font-size: 2em;
+    }
+}
+
+.edit {
+    position: absolute;
+    margin: 0px;
+    top: 1em;
+    right: 1.5em;
+    z-index: 1;
+}
+
+/* Estilos para pantallas medianas (tablets) */
+@media (max-width: 1176px) {
+    .info {
+        width: 90%;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .info .container-image {
+        border: none;
+    }
+
+    .info .info-text {
+        font-size: 1.5em;
+    }
+}
+
+/* Estilos para pantallas pequeñas (móviles) */
+@media (max-width: 480px) {
+    .info {
+        width: 100%;
+        border: 3px dotted chocolate;
+    }
+
+    .info .container-image {
+        border: none;
+    }
+
+    .info .info-text {
+        font-size: 1.2em;
+        min-width: 100%;
+        text-align: center;
+    }
+}
+
+.profile-img {
+    border: 2px solid chocolate;
+    border-radius: 50%;
+}
+
+.info-item {
+    padding-left: 25%;
+}
+
+.container-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    margin: auto;
+    width: fit-content;
+    margin-top: 3em;
+    margin-bottom: 3em;
+}
+
+.container-buttons button:hover {
+    opacity: 0.8;
+}
+
+.container-image {
+    border-right: 3px solid whitesmoke;
+    width: fit-content;
+    display: flex;
+
+    div {
+        width: fit-content;
+    }
+
+    p {
+        text-align: right;
+        font-size: 1.5em;
+        padding-top: 0.5em;
+    }
+}
+
+.img-edit:hover {
+    cursor: pointer;
+
+    ::after {
+        content: 'Cambiar imagen';
+        position: absolute;
+        background-color: rgba(255, 255, 255, 0.3);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+</style>

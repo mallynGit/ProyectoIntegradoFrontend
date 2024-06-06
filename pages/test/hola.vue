@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <q-select class="q-pa-md" v-model="sel" :options="options" label="select" style="width: 300px"
+  <div class="container">
+    <q-select class="q-pa-md select" v-model="sel" :options="options" label="select" style="width: 300px"
       @update:model-value="swapItems"></q-select>
 
-    <test-listado :items="items" :mode="sel"></test-listado>
+    <test-listado class="lista" :items="items" :mode="sel"></test-listado>
   </div>
 </template>
 
@@ -35,3 +35,26 @@ async function swapItems() {
 let sel = ref("users");
 let options = ["pets", "users"];
 </script>
+
+<style scoped lang="scss">
+.container{
+  width: 80%;
+  margin: 5em auto 0 auto;
+  padding-bottom: 3em;
+}
+
+.lista{
+  background-color: #e99d55;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.select{
+  font-size: 1.5em;
+  border-bottom: chocolate 3px solid;
+  margin-bottom: 3em;
+  padding: 0 1em;
+
+}
+
+</style>

@@ -9,19 +9,19 @@
     <app-header @loaded="(loaded)=>pageLoaded=loaded"/>
     <div class="content">
       <!-- Aquí colocas tu contenido -->
-      
+     
       <NuxtPage />
-      <footer-chat v-if="useUser().isLogged()" />
+      <footer-chat v-if="useUserStore().user" />
     </div>
-
+ 
   </div>
 </template>
-
+ 
 <script setup>
 let pageLoaded = ref(false)
-
+ 
 </script>
-
+ 
 <style scoped>
 .loader {
   display: flex;
@@ -30,7 +30,7 @@ let pageLoaded = ref(false)
   height: 100vh;
   width: 100vw;
 }
-
+ 
 .container {
   display: flex;
   flex-direction: column;
@@ -41,16 +41,17 @@ let pageLoaded = ref(false)
   overflow: hidden;
   /* Evita cualquier desbordamiento fuera del contenedor */
 }
-
+ 
 .content {
+  background-color: #e9c9ab7a;
   flex: 1;
   /* Hace que el contenido ocupe todo el espacio disponible en el contenedor */
   overflow: auto;
   /* Agrega barras de desplazamiento si el contenido es más grande que el contenedor */
-  border: 2px solid darkred;
-
+  /* border: 2px solid darkred; */
+ 
 }
-
+ 
 .page {
   width: 100%;
 }

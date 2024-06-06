@@ -1,16 +1,16 @@
 <template>
-    <div style="border: 3px double black">
-        <span class="text-h5 q-py-sm row justify-center">Listado: {{ mode }}</span>
+    <div class="container-list">
+        <span class="q-py-sm row justify-center title-listado">Listado: {{ mode }}</span>
         <q-separator />
         <template v-for="(item, index) of items">
             <q-separator v-if="index > 0"></q-separator>
             <q-expansion-item :label="mode == 'users' ? item.email : mode == 'pets' ? item.raza : ''">
                 <q-separator />
-                <q-card>
+                <q-card class="container-input">
                     <q-card-section v-for="(k, v) of filterFields(item)">
-                        <q-input :label="v" :model-value="k" @change="(e) => updateInputValue(item, v, e)" />
+                        <q-input class="input" :label="v" :model-value="k" @change="(e) => updateInputValue(item, v, e)" />
                     </q-card-section>
-                    <q-card-actions>
+                    <q-card-actions class="buttons">
                         <q-btn color="green" @click="updateItem(item)">Aplicar</q-btn>
                         <q-btn color="grey">Restablecer</q-btn>
                         <q-btn color="red" @click="deleteItem(item._id)">Eliminar</q-btn>
@@ -71,3 +71,30 @@ async function updateItem(item) {
 }
 
 </script>
+
+<style scoped lang="scss">
+.container-list{
+    border: 3px solid chocolate;
+    padding: 1em;
+}
+
+.title-listado{
+    font-size: 1.5em;
+    text-decoration: underline;
+    opacity: 0.7;
+    font-weight: bold;
+}
+
+.container-input{
+    background-color: #e9d6c47a;
+}
+
+.buttons{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: auto;
+    padding-bottom: 2em;
+    gap: 1em;
+}
+</style>

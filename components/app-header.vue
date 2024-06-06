@@ -1,22 +1,26 @@
 <template>
     <div class="header">
-        <q-layout view="lHh lpr lfr" container style="height: 8vh; width:100%;">
-            <q-header elevated>
-                <q-toolbar class="glossy tb">
+        <q-layout view="lHh lpr lfr" container style="height: 6vh; width:100%;">
+            <q-header>
+                <q-toolbar class="tb">
                     <q-toolbar-title style="display: flex; vertical-align: middle;">
-                        <q-btn class="glossy title" size="18px" rounded label="Bondpet" to="/" />
+                        <q-btn class="title" label="Bondpet" to="/" />
                         <marquee direction="left" scrollamount="20" width="88%" style="user-select: none;"><span
-                                style="font-size:31px;">{{ rutaActual ? rutaActual : '???' }}</span>
+                                style="font-size:23px;">{{ rutaActual ? rutaActual :
+                                    '"¡Bienvenido a Bondpet, la comunidad donde los amantes de las mascotas se conectan y comparten sus pasiones!"'}}</span>
                         </marquee>
                     </q-toolbar-title>
-                    <q-btn flat round dense icon="mdi-dog-side" label="Pets" to="/pets" />
-                    <q-btn flat round dense icon="mdi-gamepad" label="test" to="/test/hola" />
-                    <q-btn label="reportes" to="/test/reportes" />
-                    <q-btn flat round dense icon="mdi-account-plus" label="register" to="/auth/register" />
-                    <q-btn flat round dense icon="mdi-account-arrow-left" label="login" to="/auth/login" />
-                    <q-btn flat round dense icon="mdi-account-off" label="logout" @click="logout()" />
-                    <q-chip clickable @click="router.push('/user/profile')"> Estado: {{ logueado ? 'ON' : 'OFF'
-                        }}</q-chip>
+                    <div class="container-buttons">
+                        <q-btn flat icon="mdi-dog-side" label="Pets" to="/pets" />
+                        <q-btn flat icon="mdi-gamepad" label="test" to="/test/hola" />
+                        <q-btn flat label="reportes" to="/test/reportes" />
+                        <q-btn flat icon="mdi-account-plus" label="register" to="/auth/register" />
+                        <q-btn flat icon="mdi-account-arrow-left" label="login" to="/auth/login" />
+                        <q-btn flat icon="mdi-account-off" label="logout" @click="logout()" />
+                        <q-chip class="estado" clickable @click="router.push('/user/profile')"> Estado: {{ logueado ?
+                            'ON' : 'OFF'
+                            }}</q-chip>
+                    </div>
                 </q-toolbar>
             </q-header>
         </q-layout>
@@ -60,7 +64,7 @@ onMounted(async () => {
     logueado.value = composable.isLogged();
     emits('loaded', true)
 
-    if(logueado.value == true){
+    if (logueado.value == true) {
         reportStore = useReportStore()
         console.log('report store existe 🤧')
     }
@@ -72,13 +76,30 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
+.header {
+    padding-top: 0.3em;
+    background-color: $secondary;
+}
+
+.container-buttons {
+    display: flex;
+}
+
 //suelta errores pero aun asi pilla el scss por la configuracion en nuxt.config.ts
 .tb {
     background-color: $secondary;
 }
 
 .title {
-    background-color: $primary;
+    background-color: $secondary;
     user-select: none;
+    border-right: 5px solid white;
+    font-size: large;
+    height: 100%;
+}
+
+.estado {
+    background-color: rgb(39, 38, 38);
+    color: whitesmoke;
 }
 </style>

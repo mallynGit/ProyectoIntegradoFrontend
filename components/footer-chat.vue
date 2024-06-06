@@ -1,17 +1,9 @@
 <template>
   <div class="footer row justify-end items-end">
-    <listado-usuarios
-      v-if="openUserList"
-      v-model="openUserList"
-      @update:model-value="(e) => r(e)"
-      @opened="(e) => r(e)"
-    />
+    <listado-usuarios v-if="openUserList" v-model="openUserList" @update:model-value="(e) => r(e)"
+      @opened="(e) => r(e)" />
     <div class="q-pa-sm col-6 chat" v-if="openChat != null">
-      <q-expansion-item
-        class="conversation"
-        :label="'Chat ' + openChat"
-        default-opened
-      >
+      <q-expansion-item class="conversation" :label="'Chat ' + openChat" default-opened>
         <template v-slot:header>
           <div class="chat-header">
             {{
@@ -24,41 +16,32 @@
 
         <template v-slot:default>
           <div class="chat-content">
-            <q-virtual-scroll
-              :items="openChat.mensajes"
-              class="scr"
-              v-slot="{ item, index }"
-              ref="scrollChat"
-            >
-              <q-item
-                :class="`row no-wrap items-center justify${
-                  transformUIDToNick(item.autor, openChat) ==
+            <q-virtual-scroll :items="openChat.mensajes" class="scr" v-slot="{ item, index }" ref="scrollChat">
+              <q-item :class="`row wrap items-center justify${transformUIDToNick(item.autor, openChat) ==
+                useUser().getUser().nick
+                ? '-start'
+                : '-end'
+                }`">
+                <q-chat-message :name="transformUIDToNick(item.autor, openChat)" :text="[item.contenido]" :sent="transformUIDToNick(item.autor, openChat) !=
                   useUser().getUser().nick
-                    ? '-start'
-                    : '-end'
-                }`"
-              >
-                <q-chat-message
-                  :name="transformUIDToNick(item.autor, openChat)"
-                  :text="[item.contenido]"
-                  :sent="
-                    transformUIDToNick(item.autor, openChat) !=
-                    useUser().getUser().nick
                   "
-                >
+                   
+                  >
+                  <template v-slot:stamp>
+                    <span style="font-size: 11.5px">
+                      {{ new Date(item.timestamp).toLocaleString('es-ES', {
+                      dateStyle: 'short', timeStyle: 'short'
+                      }) }}
+                      </span>
+                  </template>
                   <template v-slot:avatar>
-                    <q-img
-                      :src="`${apiUrl}/uploads/${item.autor}`"
-                      ratio="1"
-                      height="35px"
-                      width="35px"
-                      :class="`q-m${
-                        transformUIDToNick(item.autor, openChat) ==
-                        useUser().getUser().nick
-                          ? 'r'
-                          : 'l'
-                      }-md`"
-                    ></q-img>
+                    <q-img :src="`${apiUrl}/uploads/${item.autor}`" ratio="1" height="35px" width="35px" :class="`${transformUIDToNick(item.autor, openChat) ==
+                      useUser().getUser().nick
+                      ? 'q-mr-md'
+                      : 'q-ml-md'
+                      }`"
+                      style="min-width: 35px;"
+                      ></q-img>
                   </template>
                 </q-chat-message>
               </q-item>
@@ -66,12 +49,7 @@
             <q-separator />
             <div class="chat-input self-center">
               <form @submit.prevent="testeo">
-                <q-input
-                  type="text"
-                  placeholder="Escribe mensaje"
-                  dense
-                  v-model="newMessage"
-                ></q-input>
+                <q-input type="text" placeholder="Escribe mensaje" dense v-model="newMessage"></q-input>
               </form>
             </div>
           </div>
@@ -88,31 +66,19 @@
         <template v-slot:default>
           <div class="q-py-sm q-pl-sm q-pr-lg cvs">
             <q-list separator class="chat-list">
-              <q-item
-                clickable
-                v-ripple
-                v-for="v of useUserStore().chats"
-                :key="v._id"
-                @click="openChat = v"
-              >
+              <q-item clickable v-ripple v-for="v of useUserStore().chats" :key="v._id" @click="openChat = v">
                 <q-item-section avatar>
-                  <q-img
-                    ratio="1"
-                    width="50px"
-                    :src="`${apiUrl}/uploads/${
-                      v.participantes.filter(
-                        (i) => i._id != useUser().getUser()._id
-                      )[0]._id
-                    }`"
-                  />
+                  <q-img ratio="1" width="50px" :src="`${apiUrl}/uploads/${v.participantes.filter(
+                    (i) => i._id != useUser().getUser()._id
+                  )[0]._id
+                    }`" />
                 </q-item-section>
 
-                <q-item-section
-                  >{{
-                    v.participantes.filter(
-                      (i) => i._id != useUser().getUser()._id
-                    )[0].nick
-                  }}
+                <q-item-section>{{
+                  v.participantes.filter(
+                    (i) => i._id != useUser().getUser()._id
+                  )[0].nick
+                }}
                 </q-item-section>
               </q-item>
             </q-list>
@@ -132,7 +98,7 @@ const apiUrl = useRuntimeConfig().public.urlApi;
 import { ref } from "vue";
 import io from "socket.io-client";
 
-const socket = io(useRuntimeConfig().public.urlApi, {auth: {user: useUser().getUser()._id}});
+const socket = io(useRuntimeConfig().public.urlApi, { auth: { user: useUser().getUser()._id } });
 
 socket.on("connect", () => {
   console.log("Conectado");
@@ -140,10 +106,17 @@ socket.on("connect", () => {
 
 socket.on("new msg", (data) => {
   console.log(data, "new msg");
-  // useUserStore().chats.filter((c) => c._id == data.id)[0].mensajes.push({
-  //   autor: data.autor,
-  //   contenido: data.content,
-  // });
+  useUserStore().chats.filter((c) => c._id == data.id)[0].mensajes.push({
+    autor: data.autor,
+    contenido: data.content,
+    timestamp: data.timestamp
+  });
+  nextTick(() => {
+    scrollChat.value.scrollTo(
+      useUserStore().chats.filter((c) => c._id == openChat.value._id)[0]
+        .mensajes.length
+    );
+  });
 })
 
 onBeforeMount(async () => {
@@ -157,7 +130,7 @@ onBeforeMount(async () => {
     });
 });
 
-onMounted(() => {});
+onMounted(() => { });
 
 const openChat = ref(null);
 const currentChatId = computed(() => {
@@ -198,6 +171,7 @@ function transformUIDToNick(uid, chat) {
 }
 
 async function testeo() {
+  if (newMessage.value.trim() === '') return
   // openChat.value.mensajes.push({ autor: useUser().getUser()._id, contenido: newMessage.value })
   await useUser().sendMessage({
     autor: useUser().getUser()._id,
@@ -225,27 +199,7 @@ watch(openChat, (old) => {
     return;
   } else {
   }
-  //   if (!sockets.value[openChat.value._id]) {
-  //     let newSocket = io(apiUrl);
-  //     newSocket.on("error", (e) => {
-  //       console.log(e, "ERROR CATASTROFICO");
-  //     });
-
-  //     newSocket.on("connect", () => {
-  //       console.log("Conectado en chat:", currentChatId.value);
-  //       newSocket.send(JSON.stringify({ id: openChat.value._id }));
-  //     });
-
-  //     newSocket.onmessage = async (e) => {
-  //       let data = JSON.parse(e.data);
-  //       useUserStore()
-  //         .chats.filter((c) => c._id == data.id)[0]
-  //         .mensajes.push({ autor: data.autor, contenido: data.content });
-  //     };
-
-  //     sockets.value[openChat.value._id] = newSocket;
-  //   }
-  // }
+  
   nextTick(() => {
     scrollChat.value.scrollTo(
       useUserStore().chats.filter((c) => c._id == openChat.value._id)[0]
@@ -265,7 +219,6 @@ watch(openChat, (old) => {
   // height: 100%;
   // border: 1px solid cyan;
   display: flex;
-  background-color: white;
 
   .chat {
     position: relative;
@@ -273,6 +226,7 @@ watch(openChat, (old) => {
     width: 40%;
     height: 100%;
     border: 1px solid goldenrod;
+    background-color: white;
 
     .conversation {
       border: 1px solid greenyellow;
@@ -294,7 +248,8 @@ watch(openChat, (old) => {
     .chat-content {
       max-height: 42vh;
       // min-height: 42vh;
-
+      max-width: 100%;
+      text-wrap: wrap;
       border: 1px solid red;
 
       .scr {
@@ -312,6 +267,7 @@ watch(openChat, (old) => {
     // overflow-y: scroll;
     height: 100%;
     // border: 1px solid goldenrod;
+    background-color: white;
 
     .chat-list {
       border: 1px solid red;

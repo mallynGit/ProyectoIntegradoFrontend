@@ -1,48 +1,20 @@
 <template>
-    <ShowMedia :media="media.pet" :model-value="media.popup" @update:model-value="(v) => updatePopup(v)" />
-
-    <div >
-        <q-drawer v-model="media.pet">hola</q-drawer>
-        <div class="q-mx-lg q-ma-sm"
-            style="box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 0px 4px inset, rgba(0, 0, 0, 0.9) 0px 0px 0px 3px;">
-            <q-input label="filtro" v-model="filtro" /> <q-select :options="options" v-model="selectedFilter" />
+    <div class="container q-pb-sm">
+        <div class="q-pa-md container-filtro">
+            <div class="q-pa-md filtro">
+                <q-select :options="options" v-model="selectedFilter" />
+                <q-input label="Filtro" v-model="filtro" />
+            </div>
         </div>
-        <q-pagination v-model="paginaActual" :max="totalPaginas" direction-links boundary-links />
-        <div class="pets q-gutter row pet-container">
-            <q-card v-for="pet of petsPag" :key="pet._id"
-                class="pet-card q-mx-xs q-my-sm col-lg-auto col-md-auto col-sm-auto col-xs-12">
-                <q-card-section horizontal>
-                    <q-card-section>
-                        <div class="card-content">
-                            <p v-for="(k, v) of filterFields(pet)" :key="v" class="text-h6">
-                                {{ v[0].toUpperCase() + v.slice(1) }}: <span class="text-subtitle1"><br />{{ k }}</span>
-                            </p>
-                            <p><span class="text-h6">Dueño</span>: <span class="text-subtitle1"><br />{{ pet.master.nick
-                                    }}</span></p>
-                        </div>
-                    </q-card-section>
-                    <div class="col items-center row justify-center q-pa-sm">
-                        <q-img class="img" :src="apiUrl + '/uploads/' + pet.foto_perfil" width="100%" fit="cover"
-                            ratio=1 @click="navigateToPet(pet._id)" />
-                        <!-- <q-btn @click="testDelete(pet._id)">vete de aqui</q-btn> -->
-                    </div>
-                </q-card-section>
-
-            </q-card>
+        <q-pagination class="paginacion" v-model="paginaActual" :max="totalPaginas" direction-links boundary-links />
+        <div class="pets row pet-container">
+            <pet-card v-for="pet in petsPag" :key="pet._id" :pet="pet" />
         </div>
     </div>
 </template>
 
 <script setup>
 import { usePet } from '~/composables/petComposable'
-const apiUrl = useRuntimeConfig().public.urlApi
-const router = useRouter()
-
-// function testDelete(id) {
-//     usePet().petStore.pets.splice(usePet().petStore.pets.findIndex((pet) => pet._id == id), 1)
-// }
-
-let media = ref({ pet: [], popup: false })
 let pets = ref([])
 
 const filtro = ref(null)
@@ -51,11 +23,11 @@ const selectedFilter = ref(options.value[0])
 
 const paginaActual = ref(1)
 const petsPag = computed(() => {
-    const start = (paginaActual.value - 1) * 8
-    const end = start + 8
+    const start = (paginaActual.value - 1) * 9
+    const end = start + 9
     return pets.value.slice(start, end)
 })
-const totalPaginas = computed(() => Math.ceil(pets.value.length / 8))
+const totalPaginas = computed(() => Math.ceil(pets.value.length / 9))
 
 watch(filtro, () => {
     checkFiltro()
@@ -71,37 +43,67 @@ function checkFiltro() {
     console.log('?!', petsPag.value)
 }
 
-// pets.value = await usePet().getPets()
-
-function updatePopup(newValue) {
-    media.value.popup = newValue;
-}
-
-function navigateToPet(id) {
-    return router.push('/pets/' + id)
-}
-
-function filterFields(item) {
-    let filtered = (({ _id, foto_perfil, multimedia, posts, comentarios, master, ...item }) => item)(item)
-    return filtered
-}
-
-function popup(pet) {
-    media.value.popup = true;
-    media.value.pet = pet.multimedia
-}
 </script>
 
 <style scoped lang="scss">
+.container {
+    min-height: 93vh;
+    padding-bottom: 3em;
+}
+
+.container-filtro {
+    width: 40%;
+    margin: auto;
+}
+
+.filtro{
+    background-color: rgb(253, 243, 231);
+    border-radius: 15px;
+}
+
+.paginacion {
+    width: fit-content;
+    margin: auto;
+    margin-top: 3em;
+}
+
+
 .pet-card:hover {
-    // min-width: 30%;
-    // max-width: 33%;
-    box-shadow: 0px 0px 0px 1px orangered inset;
+    outline: 5px solid rgb(0, 0, 0);
+}
+
+.pets {
+    width: 85%;
+    margin: auto;
 }
 
 .pet-container {
-    justify-content: space-evenly;
+    justify-content: space-around;
+    margin-top: 3em;
+
+    // background-color: black;
 }
+
+.pet-card {
+    height: 50vh;
+    overflow-y: scroll;
+    border: 1px solid whitesmoke;
+    background-color: #ca7a2fa4;
+    cursor: pointer;
+}
+
+.pet-card::-webkit-scrollbar {
+    width: 8px;
+}
+
+.pet-card::-webkit-scrollbar-thumb {
+    background-color: #ca7a2f;
+    border-radius: 10px;
+}
+
+// .pet-card::-webkit-scrollbar-track {
+//     background: #f1f1f1;
+// }
 
 @media screen and (max-width: 1420px) {}
 
@@ -109,16 +111,21 @@ p {
     user-select: none;
 }
 
-.card-content {
+.card-container {}
+
+.card-text-content {
     max-width: 125px;
+    min-width: 125px;
     overflow: hidden;
     word-wrap: break-word;
 }
 
 .img {
-    min-width: 100px;
-    max-width: 80%;
-    border: 1px solid orangered;
-    border-radius: 10%
+    border: 2px solid whitesmoke;
+    border-radius: 8px;
+    width: 180px;
+    height: auto;
+    fit: cover;
+    background-color: #ca7a2f;
 }
 </style>

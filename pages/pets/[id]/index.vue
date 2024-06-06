@@ -1,117 +1,47 @@
 <template>
-    <q-btn @click="useRouter().back()" icon="mdi-arrow-left"> </q-btn>
+    <div class="container">
 
-    <ShowMedia :media="media.pet" :model-value="media.popup" @update:model-value="(v) => updatePopup(v)" />
-    <ReportForm :id="report.id" :model-value="report.show" @update:model-value="(v) => report.show = v"
-        :tipo="report.tipo" />
-    <div v-if="!loading" style="height: 100%" class="q-pa-sm">
-        <!-- perfil -->
-        <div class="q-ma-md">
-            <div class="info row q-my-sm justify-center items-center">
-                <!-- <span v-for="(k, v) of filterFields(pet)" :key="v">{{ v }}: {{ k }}<br /></span> -->
-                <div class="q-py-md col justify-center items-end column">
-                    <div class=" col-9">
-                        <q-img :src="apiUrl + '/uploads/' + pet.foto_perfil" width="250px" ratio="1"
-                            class="profile-img"></q-img>
-                    </div>
-                    <div class="col-9">
-                        <span>Master: </span>
-                        <span class="text-h6"> {{ pet.master.nick
-                            }}</span>
+        <q-btn class="back-button" @click="useRouter().back()" icon="mdi-arrow-left"> </q-btn>
+
+        <ShowMedia :media="media.pet" :model-value="media.popup" @update:model-value="(v) => updatePopup(v)" />
+        <ReportForm :id="report.id" :model-value="report.show" @update:model-value="(v) => report.show = v"
+            :tipo="report.tipo" />
+        <div v-if="!loading" style="height: 100%" class="q-pa-sm">
+            <!-- perfil -->
+            
+            <pet-profile :pet="pet" @report="(v) => petReport(v)" @showMedia="popup(pet)" />
+
+            <q-separator />
+            <div class="comentarios q-pa-md q-mb-md">
+
+                <div v-if="useUser().isLogged()">
+                    <q-input label="Comentario a escribir" ref="comentario" flat
+                        @keydown.enter.prevent="postComment(comentarioInput)" v-model="comentarioInput"></q-input>
+                </div>
+
+                <div v-else>
+                    <p style="font-style:italic; font-size: large;">Loguéese para poder comentar</p>
+                </div>
+                <q-pagination v-model="currentPage" :max="totalPages"
+                    class="q-pa-md items-center justify-center paginacion" direction-links boundary-links />
+
+                <div class="q-pa-sm q-mx-auto" v-for="c of paginatedComments" :key="c._id">
+
+                    <comentario-pet :c="c" :pet="pet" @reply="(content) => reply(content)"
+                        :loggedIn="useUser().isLogged()" @report="(v) => commentReport(v)" mode="comment" />
+
+                    <div class="replies q-mt-md">
+                        <comentario-pet v-for="r of c.respuestas" :key="r.id" :c="r" :pet="pet" mode="reply" />
                     </div>
 
                 </div>
-
-                <div class=" q-pa-md col justify-center column items-start">
-                    <div class="info-text">
-                        <p>
-                        <div> Nombre: </div>
-                        <div class="text-h5"> {{ pet.nombre }} </div>
-                        </p>
-                        <p class="text-h6 info-item">
-                        <div>Edad:</div>
-                        <div class="text-h5"> {{ pet.edad }} </div>
-                        </p>
-                        <p class="text-h6 info-item">
-                        <div>Categoria: </div>
-                        <div class="text-h5"> {{ pet.categoria
-                            }}</div>
-                        </p>
-                        <p class="text-h6 info-item">
-                        <div>Raza: </div>
-                        <div class="text-h5"> {{ pet.raza }}</div>
-                        </p>
-                        <div class="info-item row">
-                            <div class="column col">
-                                <span>Peso: </span>
-                                <span class="text-h5"> {{ pet.peso }} </span>
-                            </div>
-                            <div class="column col">
-                                <div>Sexo: </div>
-                                <div class="text-h5"> {{ pet.sexo }} </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!--             buena idea de campos a meter    
-                
-                  </div>-->
-            </div>
-            <q-btn label="Media" color="orange" @click="popup(pet)"></q-btn>
-            <q-btn label="Posts" color="blue" @click="useRouter().push(`/pets/${pet._id}/posts`)"></q-btn>
-            <q-btn label="report" color="red" @click="petReport()" />
-            <q-btn v-if="pet.master._id == useUser().getUser()?._id" @click="navigateToCreatePost(pet._id)"
-                label="Crear post" color="green"></q-btn>
-            <q-btn v-if="pet.master._id == useUser().getUser()?._id" :to="pet._id + '/editProfile'"
-                label="editar perfil" color="green"></q-btn>
-        </div>
-
-        <q-separator />
-        <div class="comentarios q-pa-md q-mb-md">
-
-            <div v-if="useUser().isLogged()">
-                <q-input label="Comentario a escribir" ref="comentario" flat
-                    @keydown.enter.prevent="postComment(comentarioInput)" v-model="comentarioInput"></q-input>
-            </div>
-
-            <div v-else>
-                <p style="font-style:italic; font-size: large;">Loguéese para poder comentar</p>
-            </div>
-            <q-pagination v-model="currentPage" :max="totalPages" class="q-pa-md items-center justify-center"
-                direction-links boundary-links />
-
-            <div class="q-pa-sm q-mx-auto" v-for="c of paginatedComments" :key="c._id">
-
-                <comentario-pet :c="c" :pet="pet" @reply="(content) => reply(content)" :loggedIn="useUser().isLogged()"
-                    @report="(v) => commentReport(v)" />
-
-                <div class="replies q-mt-md">
-                    <div class="reply" v-for="r of c.respuestas" :key="r.id">
-                        <div class="comment-header">
-                            <span>{{ formatDate(r.timestamp) }}</span>
-                        </div>
-                        <div class="comment-body">
-                            <div class="author-info q-ma-auto">
-                                <q-img :src="apiUrl + '/uploads/' + r.autor._id" width="50px" ratio="1"
-                                    style="border: 1px solid black"></q-img>
-                                <span>{{ r.autor.nick }}</span>
-                                <q-chip v-if="r.autor._id == pet.master._id" color="orange">Dueño</q-chip>
-                            </div>
-                            <div class="content">
-                                <p>{{ r.contenido }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
+
 import { usePet } from '~/composables/petComposable'
 import { useRuntimeConfig } from '#imports'
 import comentarioPet from '~/components/comentarioPet.vue'
@@ -177,6 +107,7 @@ function petReport() {
     console.log(report.value, 'report desde pet!')
 }
 
+
 function commentReport(form) {
     report.value.id = form.reportedId;
     report.value.tipo = 'Comentario';
@@ -184,9 +115,7 @@ function commentReport(form) {
     console.log(report.value, 'report desde comment!')
 }
 
-function navigateToCreatePost(id) {
-    useRouter().push({ path: '/pets/createPost', query: { id } })
-}
+
 
 
 async function postComment(content) {
@@ -215,10 +144,7 @@ function updatePopup(newValue) {
     media.value.popup = newValue;
 }
 
-function filterFields(item) {
-    let filtered = (({ _id, foto_perfil, multimedia, comentarios, posts, ...item }) => item)(item);
-    return filtered;
-}
+
 
 function formatDate(timestamp) {
     const date = new Date(timestamp);
@@ -233,6 +159,18 @@ function formatDate(timestamp) {
 </script>
 
 <style scoped lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+
+.container {
+    background-color: #e9c9ab7a;
+}
+
+.back-button {
+    margin-top: 2em;
+    margin-left: 1.5em;
+    border-radius: 35%;
+}
+
 .comentarios {
     // height: auto
     max-width: 80vw;
@@ -260,14 +198,19 @@ function formatDate(timestamp) {
     width: 100%;
     padding: 5px 12.5px;
     font-size: 12px;
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: rgb(54, 54, 54);
+    color: whitesmoke;
 }
 
 .comment-body {
     display: flex;
     flex: 1;
     padding: 10px;
+    background-color: rgba(211, 151, 21, 0.384);
+    border: 3px solid whitesmoke;
+
 }
+
 
 .author-info {
     width: 125px;
@@ -302,21 +245,11 @@ function formatDate(timestamp) {
     padding: 10px;
 }
 
-.info {
-    border: 1px dotted chocolate;
-    width: 100%;
-
-    .info-text {
-        min-width: 200px;
-    }
+.paginacion {
+    margin-bottom: 2em;
 }
 
-.profile-img {
-    border: 1px solid black;
-    border-radius: 50%;
-}
-
-.info-item {
-    padding-left: 25%;
+.container-comment {
+    background-color: black;
 }
 </style>

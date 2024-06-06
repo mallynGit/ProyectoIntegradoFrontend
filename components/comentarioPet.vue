@@ -1,5 +1,5 @@
 <template>
-    <div class="comment">
+    <div class="comment" v-if="mode == 'comment'">
         <div class="comment-header">
             <span>{{ formatDate(c?.timestamp) }}</span>
         </div>
@@ -24,7 +24,7 @@
                                 reply
                             </span>
                             <!-- report -->
-                            <span class="comment-action" @click="report()" >
+                            <span class="comment-action" @click="report()">
                                 <q-icon name="mdi-flag" size="16px" />
                                 report
                             </span>
@@ -37,6 +37,43 @@
     <div class="reply" v-if="replying">
         <q-input label="Escribe un comentario" v-model="replyValue" @keydown.enter.prevent="reply()"> </q-input>
     </div>
+    <div class="reply" :key="c.id" v-if="mode == 'reply'">
+        <div class="comment-header reply-header">
+            <span>{{ formatDate(c.timestamp) }}</span>
+        </div>
+        <div class="comment-body reply-body">
+            <div class="author-info q-ma-auto">
+                <q-img :src="apiUrl + '/uploads/' + c.autor._id" width="50px" ratio="1"
+                    style="border: 1px solid black"></q-img>
+                <span>{{ c.autor.nick }}</span>
+                <q-chip v-if="c.autor._id == pet.master._id" color="orange">Dueño</q-chip>
+            </div>
+            <div class="content">
+                <div class="content-text">
+                    <p>{{ c.contenido }}</p>
+                </div>
+                <div class="comment-id-line">
+                    <div class="comment-id">
+                        <span>ID: {{ c?._id }}</span>
+                        <div class="actions">
+                            <!-- reply -->
+                            <span class="comment-action" @click="replying = !replying" v-if="loggedIn">
+                                <q-icon size="16px" name="mdi-reply" />
+                                reply
+                            </span>
+                            <!-- report -->
+                            <span class="comment-action" @click="report()">
+                                <q-icon name="mdi-flag" size="16px" />
+                                report
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </template>
 
 <script setup>
@@ -45,7 +82,8 @@ const apiUrl = useRuntimeConfig().public.urlApi
 const props = defineProps({
     c: Object,
     pet: Object,
-    loggedIn: Boolean
+    loggedIn: Boolean,
+    mode: String
 })
 
 const emits = defineEmits(['reply', 'deleteComment', 'report'])
@@ -96,23 +134,54 @@ function formatDate(timestamp) {
     width: 100%;
     padding: 5px 12.5px;
     font-size: 12px;
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: rgba(80, 80, 80, 0.698);
+    color: whitesmoke;
+}
+
+.reply-header {
+    background-color: rgba(138, 138, 138, 0.698) !important;
+
 }
 
 .comment-body {
     display: flex;
     flex: 1;
     padding: 10px;
+    background-color: rgba(211, 151, 21, 0.384);
+    border: 3px solid whitesmoke;
 }
+
 
 .author-info {
     width: 125px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-right: 10px;
+    margin: 0;
+    padding: 0;
     border-right: 1px solid black;
     height: 100%;
+
+}
+
+.reply-body {
+    background-color: rgba(166, 142, 89, 0.384) !important;
+}
+
+.reply {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    margin-bottom: 10px;
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+    min-width: 325px;
+    max-width: 85%;
+    min-height: 175px;
+    background-color: rgba(1, 2, 6, 0.2);
+    font-size: 0.9em;
+    /* Tamaño de fuente más pequeño */
+    margin-left: auto;
+    /* Alinea a la derecha */
 }
 
 .content {

@@ -1,7 +1,7 @@
 <template>
-  <div class="relative-position" style="border: 1px solid cyan; height: 100%">
-    <div style="border: 2px solid blueviolet; min-height: 75%; min-width: 25%" class="absolute-center q-pa-sm">
-      <q-form @submit="login">
+  <div class="relative-position container" style="border: 1px solid cyan; height: 100%">
+    <div style="min-height: 75%; min-width: 25%" class="absolute-center q-pa-sm">
+      <q-form @submit="login" class="container-login">
         <q-input class="input" v-model="loginForm.email" filled label="Email" />
         <q-separator />
         <q-input v-model="loginForm.password" filled :type="isPwd ? 'password' : 'text'" label="Contraseña"
@@ -10,7 +10,7 @@
             <q-icon :name="isPwd ? 'mdi-eye' : 'mdi-eye-off'" class="cursor-pointer" @click="isPwd = !isPwd" />
           </template>
         </q-input>
-        <q-checkbox class="input" label="Recordarme" v-model="recordar" color="purple" />
+        <q-checkbox class="input" label="Recordarme" v-model="recordar" color="primary" />
         <q-separator />
         <div class="button-container q-pa-md">
           <q-btn class="input" label="Login" type="submit" />
@@ -67,6 +67,14 @@ const login = async () => {
 </script>
 
 <style scoped>
+
+.container-login{
+  border: 1px solid white;
+  padding: 1em;
+  border-radius: 8px;
+  box-shadow: rgb(223, 125, 46) 0px 5px 10px 4px;
+  background-color: #fff4ea;
+}
 .button-container {
   display: flex;
   align-items: center;
