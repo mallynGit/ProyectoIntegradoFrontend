@@ -8,7 +8,7 @@
                 <div class="q-py-md q-pr-xl col justify-center items-center column container-image">
                     <div>
                         <div class="edit"
-                            v-if="(useUser().isAdmin() || petRef.master._id == useUser().getUser()?._id) && !report">
+                            v-if="(useUser().isLogged() && (useUser().isAdmin() || petRef.master._id == useUser().getUser()?._id)) && !report">
                             <q-btn flat round v-if="!editar" @click="editar = !editar">
                                 <q-icon name="mdi-pencil"></q-icon>
                             </q-btn>

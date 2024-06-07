@@ -5,21 +5,16 @@
                 <q-toolbar class="tb">
                     <q-toolbar-title style="display: flex; vertical-align: middle;">
                         <q-btn class="title" label="Bondpet" to="/" />
-                        <marquee direction="left" scrollamount="20" width="88%" style="user-select: none;"><span
-                                style="font-size:23px;">{{ rutaActual ? rutaActual :
-                                    '"¡Bienvenido a Bondpet, la comunidad donde los amantes de las mascotas se conectan y comparten sus pasiones!"'}}</span>
-                        </marquee>
+
                     </q-toolbar-title>
                     <div class="container-buttons">
                         <q-btn flat icon="mdi-dog-side" label="Pets" to="/pets" />
-                        <q-btn flat icon="mdi-gamepad" label="test" to="/test/hola" />
-                        <q-btn flat label="reportes" to="/test/reportes" />
-                        <q-btn flat icon="mdi-account-plus" label="register" to="/auth/register" />
-                        <q-btn flat icon="mdi-account-arrow-left" label="login" to="/auth/login" />
-                        <q-btn flat icon="mdi-account-off" label="logout" @click="logout()" />
-                        <q-chip class="estado" clickable @click="router.push('/user/profile')"> Estado: {{ logueado ?
-                            'ON' : 'OFF'
-                            }}</q-chip>
+                        <q-btn flat icon="mdi-account-multiple" label="Listado" to="/test/hola" v-if="logueado && useUser().isAdmin()" />
+                        <q-btn flat icon="mdi-account-alert" label="reportes" to="/test/reportes" v-if="logueado && useUser().isAdmin()" />
+                        <q-btn flat icon="mdi-account-plus" label="register" to="/auth/register" v-if="!logueado" />
+                        <q-btn flat icon="mdi-account-arrow-left" label="login" to="/auth/login" v-if="!logueado" />
+                        <q-btn flat icon="mdi-account-circle" label="Perfil" to="/user/profile" v-if="logueado" />
+                        <q-btn flat icon="mdi-account-off" label="logout" @click="logout()" v-if="logueado" />
                     </div>
                 </q-toolbar>
             </q-header>

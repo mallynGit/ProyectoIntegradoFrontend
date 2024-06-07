@@ -2,18 +2,10 @@
   <div class="footer row justify-end items-end" v-if="useUser().isLogged">
     <listado-usuarios v-if="openUserList" v-model="openUserList" @update:model-value="(e) => r(e)"
       @opened="(e) => r(e)" />
-    <div class="q-pa-sm col-6 chat" v-if="openChat != null">
-      <q-expansion-item class="conversation" :label="'Chat ' + openChat" default-opened>
-        <template v-slot:header>
-          <div class="chat-header">
-            {{
-              openChat.participantes.filter(
-                (i) => i._id != useUser().getUser()._id
-              )[0].nick
-            }}
-          </div>
-        </template>
-
+    <div class=" col-6 chat" v-if="openChat != null">
+      <q-expansion-item class="conversation" :label="openChat.participantes.filter(
+        (i) => i._id != useUser().getUser()._id
+      )[0].nick" default-opened>
         <template v-slot:default>
           <div class="chat-content">
             <q-virtual-scroll :items="openChat.mensajes" class="scr" v-slot="{ item, index }" ref="scrollChat">
@@ -24,24 +16,20 @@
                 }`">
                 <q-chat-message :name="transformUIDToNick(item.autor, openChat)" :text="[item.contenido]" :sent="transformUIDToNick(item.autor, openChat) !=
                   useUser().getUser().nick
-                  "
-                   
-                  >
+                  ">
                   <template v-slot:stamp>
                     <span style="font-size: 11.5px">
                       {{ new Date(item.timestamp).toLocaleString('es-ES', {
-                      dateStyle: 'short', timeStyle: 'short'
+                        dateStyle: 'short', timeStyle: 'short'
                       }) }}
-                      </span>
+                    </span>
                   </template>
                   <template v-slot:avatar>
                     <q-img :src="`${apiUrl}/uploads/${item.autor}`" ratio="1" height="35px" width="35px" :class="`${transformUIDToNick(item.autor, openChat) ==
                       useUser().getUser().nick
                       ? 'q-mr-md'
                       : 'q-ml-md'
-                      }`"
-                      style="min-width: 35px;"
-                      ></q-img>
+                      }`" style="min-width: 35px;"></q-img>
                   </template>
                 </q-chat-message>
               </q-item>
@@ -49,7 +37,7 @@
             <q-separator />
             <div class="chat-input self-center">
               <form @submit.prevent="testeo">
-                <q-input type="text" placeholder="Escribe mensaje" dense v-model="newMessage"></q-input>
+                <q-input type="text" placeholder="Escribe mensaje" dense v-model="newMessage" class="q-pb-xs"></q-input>
               </form>
             </div>
           </div>
@@ -57,8 +45,8 @@
       </q-expansion-item>
     </div>
 
-    <div class="q-pa-sm col-6 chats">
-      <q-expansion-item class="text-h6" style="border: 1px solid salmon">
+    <div class="col-6 chats">
+      <q-expansion-item class="text-h6" style="border: 1px solid salmon; background-color: aliceblue;">
         <template v-slot:header>
           <div class="justify-evenly">Chats</div>
         </template>
@@ -199,7 +187,7 @@ watch(openChat, (old) => {
     return;
   } else {
   }
-  
+
   nextTick(() => {
     scrollChat.value.scrollTo(
       useUserStore().chats.filter((c) => c._id == openChat.value._id)[0]
@@ -229,6 +217,7 @@ watch(openChat, (old) => {
     border: 1px solid goldenrod;
     background-color: white;
     pointer-events: all;
+
     .conversation {
       border: 1px solid greenyellow;
       display: flex;
@@ -237,14 +226,7 @@ watch(openChat, (old) => {
       max-height: 100%;
     }
 
-    .chat-header {
-      position: sticky;
-      top: 0;
-      // background: white;
-      border-bottom: 1px solid blue;
-      z-index: 1;
-      padding: 0.5rem;
-    }
+
 
     .chat-content {
       max-height: 42vh;
@@ -269,7 +251,7 @@ watch(openChat, (old) => {
     // overflow-y: scroll;
     height: 100%;
     // border: 1px solid goldenrod;
-    background-color: white;
+    // background-color: white;
 
     .chat-list {
       border: 1px solid red;
