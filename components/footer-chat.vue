@@ -228,7 +228,7 @@ watch(openChat, (old) => {
     height: 100%;
     border: 1px solid goldenrod;
     background-color: white;
-
+    pointer-events: all;
     .conversation {
       border: 1px solid greenyellow;
       display: flex;
@@ -262,6 +262,7 @@ watch(openChat, (old) => {
   }
 
   .chats {
+    pointer-events: all;
     position: relative;
     max-height: 50vh;
     width: 40%;

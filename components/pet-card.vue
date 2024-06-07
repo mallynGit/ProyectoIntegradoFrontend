@@ -37,7 +37,7 @@
           ratio="1"
         />
       </div>
-      <div class="col-12 row justify-around info-2">
+      <div class="col-12 row justify-between info-2">
         <p class="text-h6">
           <span class="text-subtitle1"> Sexo: </span>
           <br />
