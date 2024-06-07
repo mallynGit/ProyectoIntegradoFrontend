@@ -14,10 +14,9 @@
         </q-dialog>
 
         <report-item :report="selectedReport.report" v-model="showReportItem" :tipo="selectedReport.tipo"></report-item>
-        <ReportForm :model-value="tryGo" @update:model-value="(v) => tryGo = v"
-            id="9ff70f88-d4c9-47d7-b059-7ab005f1035c" tipo="Comentario" />
 
-        <q-table class="table" :title="`reportes: ${reportes.length}`" :rows="reportes"
+
+        <q-table class="table"  :rows="reportes"
             :rows-per-page-options="[10, 20, 0]">
 
             <template v-slot:header="props">
@@ -45,7 +44,6 @@
         </q-table>
     </div>
 
-    <!-- <q-btn label="test" @click="tryGo = true"></q-btn> -->
 </template>
 
 <script setup>

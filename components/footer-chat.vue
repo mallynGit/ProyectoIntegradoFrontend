@@ -217,13 +217,14 @@ watch(openChat, (old) => {
   width: 60%;
   max-height: 50%;
   // height: 100%;
-  // border: 1px solid cyan;
+  border: 1px solid cyan;
   display: flex;
+  pointer-events: none;
 
   .chat {
     position: relative;
     max-height: 100%;
-    width: 40%;
+    width: 60%;
     height: 100%;
     border: 1px solid goldenrod;
     background-color: white;
@@ -263,7 +264,7 @@ watch(openChat, (old) => {
   .chats {
     position: relative;
     max-height: 50vh;
-    width: 35%;
+    width: 40%;
     // overflow-y: scroll;
     height: 100%;
     // border: 1px solid goldenrod;

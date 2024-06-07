@@ -1,28 +1,17 @@
 <template>
   <q-btn @click="useRouter().back()">pa tras</q-btn>
-  la id es {{ id }}
 
   <form @submit.prevent.default="p">
     <q-input label="Titulo" v-model="form.titulo"></q-input>
-    <q-input
-      type="textarea"
-      label="Cuerpo del post"
-      v-model="form.contenido"
-    ></q-input>
-    <q-file
-      label="Multimedia (puedes elegir hasta varios archivos)"
-      multiple
-      append
-      v-model="form.multimedia"
-      @update:model-value="checkImages"
-    ></q-file>
+    <q-input type="textarea" label="Cuerpo del post" v-model="form.contenido"></q-input>
+    <q-file label="Multimedia (puedes elegir hasta varios archivos)" multiple append v-model="form.multimedia"
+      @update:model-value="checkImages"></q-file>
     <div>
       <span v-for="(pic, index) in picture" :key="index" style="position: relative;">
         <q-btn @click="removeImg(index)" class="remove">X</q-btn>
-        <q-img :src="pic" alt="wow" width="100px"></q-img>
+        <q-img :src="pic" alt="wow" width="200px"></q-img>
       </span>
     </div>
-    <q-input v-model="form.autor" label="autor" readonly></q-input>
     <q-btn type="submit" label="crear post"></q-btn>
   </form>
 </template>
@@ -71,14 +60,17 @@ async function p() {
   formD.append("pet", id);
 
   console.log(form, "chulo!");
-  await usePet().createPost(formD);
+  const createdPost = await usePet().createPost(formD);
+  useRouter().push({ path: `/pets/${id}/posts/${createdPost._id}` });
+  console.log(createdPost, ' a ver el pos creado')
 }
 </script>
 
 <style scoped lang="scss">
-.remove{
+.remove {
   position: absolute;
-  top: 0;
+  background-color: antiquewhite;
   right: 0;
+  z-index: 1;
 }
 </style>

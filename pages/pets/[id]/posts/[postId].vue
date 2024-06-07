@@ -2,15 +2,17 @@
 
     <q-btn @click="useRouter().back()" icon="mdi-arrow-left"> </q-btn>
     <report-form :id="postId" tipo="Post" :model-value="showReport" @update:model-value="(v) => showReport = v" />
-    <div>
-        <span class="cursor-pointer" @click="showReport = true"><q-icon name="mdi-flag" /> Reportar</span>
+    <div class="container">
+        <q-btn class="cursor-pointer report" @click="showReport = true"><q-icon name="mdi-flag" /> Reportar</q-btn>
 
 
-        <h4> {{ post.titulo }}</h4>
-        <div class="images">
+        <h4 class="text-center q-pt-xl"> {{ post.titulo }}</h4>
+        <div class="images q-py-md">
             <q-img v-for="i of post.multimedia" :src="apiUrl + '/uploads/' + i" width="200px"></q-img>
         </div>
-        <p> {{ post.contenido }}</p>
+        <div class="q-pb-xl">
+            <p>{{ post.contenido }}</p>
+        </div>
 
     </div>
 
@@ -31,4 +33,22 @@ const { id, postId } = route.params
 
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.container {
+    background-color: aliceblue;
+    padding-left: 10%;
+    padding-right: 10%;
+    width: 70%;
+    margin: auto;
+    min-height: 475px;
+    // height: 375px;
+    position:relative;
+}
+
+.report{
+    position: absolute;
+    top: 0;
+    right: 0;
+
+}
+</style>

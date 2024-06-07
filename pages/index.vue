@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <img class="fondo-gatos" src="../assets/images/fondo-gatos.png"></img>
+        <!-- <img class="fondo-gatos" src="../assets/images/fondo-gatos.png"></img> -->
         <div class="container-intro">
             <h3 class="title">Bondpet</h3>
             <div class="container-image">

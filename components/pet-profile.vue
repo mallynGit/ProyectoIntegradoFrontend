@@ -1,79 +1,87 @@
 <template>
     <div class="q-ma-sm">
-        <div class="info row q-my-sm justify-center items-center">
-            <div class="q-py-md col justify-center items-center column container-image">
-                <div>
-                    <div class="edit">
-                        <q-btn flat round v-if="!editar" @click="editar = !editar">
-                            <q-icon name="mdi-pencil"></q-icon>
-                        </q-btn>
-                        <div v-else>
-                            <q-btn flat round @click="saveChanges()">
-                                <q-icon name="mdi-check"></q-icon>
+        <ShowMedia :media="media.pet" :model-value="media.popup" @update:model-value="(v) => updatePopup(v)" />
+        <ReportForm :id="reportRef.id" :model-value="reportRef.show" @update:model-value="(v) => reportRef.show = v"
+            :tipo="report.tipo" />
+        <div class="info column q-my-sm justify-center items-center">
+            <div class="row q-mt-xl">
+                <div class="q-py-md q-pr-xl col justify-center items-center column container-image">
+                    <div>
+                        <div class="edit"
+                            v-if="(useUser().isAdmin() || petRef.master._id == useUser().getUser()?._id) && !report">
+                            <q-btn flat round v-if="!editar" @click="editar = !editar">
+                                <q-icon name="mdi-pencil"></q-icon>
                             </q-btn>
-                            <q-btn flat round @click="restoreDefaultValues()">
-                                <q-icon name="mdi-close"></q-icon>
-                            </q-btn>
+                            <div v-else>
+                                <q-btn flat round @click="saveChanges()">
+                                    <q-icon name="mdi-check"></q-icon>
+                                </q-btn>
+                                <q-btn flat round @click="restoreDefaultValues()">
+                                    <q-icon name="mdi-close"></q-icon>
+                                </q-btn>
+                            </div>
+                        </div>
+
+                        <q-img :src="profilePic" width="250px" ratio="1"
+                            :class="`profile-img ${editar ? 'img-edit' : ''}`"
+                            @click="editar ? triggerFileInput() : ''">
+                        </q-img>
+                        <input type="file" ref="fileInput" style="display: none" @change="handleFileUpload" />
+                    </div>
+                    <p><strong>Master:</strong> {{ petRef.master.nick }}</p>
+                </div>
+                <div class="q-pa-md col justify-center column items-start">
+                    <div class="info-text">
+                        <div>
+                            <span class="text-weight-bold">Nombre: </span>
+                            <span v-if="!editar">{{ petRef.nombre }}</span>
+                            <q-input dense v-else v-model="snapshot.nombre" />
+                        </div>
+                        <div>
+                            <span class="text-weight-bold">Edad: </span>
+                            <span v-if="!editar">{{ petRef.edad }}</span>
+                            <q-input dense v-else v-model="snapshot.edad" />
+                        </div>
+                        <div>
+                            <span class="text-weight-bold">Categoria: </span>
+                            <span v-if="!editar">{{ petRef.categoria }}</span>
+                            <q-input dense v-else v-model="snapshot.categoria" />
+                        </div>
+                        <div>
+                            <span class="text-weight-bold">Raza: </span>
+                            <span v-if="!editar">{{ petRef.raza }}</span>
+                            <q-input dense v-else v-model="snapshot.raza" />
+                        </div>
+                        <div>
+                            <span class="text-weight-bold">Peso: </span>
+                            <span v-if="!editar">{{ petRef.peso ? petRef.peso : 0 }}KG</span>
+                            <q-input dense type="number" v-else v-model="snapshot.peso">
+                                <template v-slot:append>
+                                    KG
+                                </template>
+                            </q-input>
+                        </div>
+                        <div>
+                            <span class="text-weight-bold">Sexo: </span>
+                            <span v-if="!editar">{{ petRef.sexo }}</span>
+                            <div v-else>
+                                <q-option-group :options="sexOptions" dense v-model="snapshot.sexo" value="H" />
+                            </div>
                         </div>
                     </div>
-
-                    <q-img :src="profilePic" width="250px" ratio="1" :class="`profile-img ${editar ? 'img-edit' : ''}`"
-                        @click="editar ? triggerFileInput() : ''">
-                    </q-img>
-                    <input type="file" ref="fileInput" style="display: none" @change="handleFileUpload" />
-                </div>
-                <p><strong>Master:</strong> {{ petRef.master.nick }}</p>
-            </div>
-            <div class="q-pa-md col justify-center column items-start">
-                <div class="info-text">
-                    <div>
-                        <span class="text-weight-bold">Nombre: </span>
-                        <span v-if="!editar">{{ petRef.nombre }}</span>
-                        <q-input dense v-else v-model="snapshot.nombre" />
-                    </div>
-                    <div>
-                        <span class="text-weight-bold">Edad: </span>
-                        <span v-if="!editar">{{ petRef.edad }}</span>
-                        <q-input dense v-else v-model="snapshot.edad" />
-                    </div>
-                    <div>
-                        <span class="text-weight-bold">Categoria: </span>
-                        <span v-if="!editar">{{ petRef.categoria }}</span>
-                        <q-input dense v-else v-model="snapshot.categoria" />
-                    </div>
-                    <div>
-                        <span class="text-weight-bold">Raza: </span>
-                        <span v-if="!editar">{{ petRef.raza }}</span>
-                        <q-input dense v-else v-model="snapshot.raza" />
-                    </div>
-                    <div>
-                        <span class="text-weight-bold">Peso: </span>
-                        <span v-if="!editar">{{ petRef.peso ? petRef.peso : 0 }}KG</span>
-                        <q-input dense type="number" v-else v-model="snapshot.peso">
-                            <template v-slot:append>
-                                KG
-                            </template>
-                        </q-input>
-                    </div>
-                    <div>
-                        <span class="text-weight-bold">Sexo: </span>
-                        <span v-if="!editar">{{ petRef.sexo }}</span>
-                        <div v-else>
-                            <q-option-group :options="sexOptions" dense v-model="snapshot.sexo" value="H" />
-                        </div>
-                    </div>
                 </div>
             </div>
-        </div>
-        <div class="container-buttons" v-if="!report">
-            <q-btn class="button" label="Media" color="orange" @click="popup(petRef)"></q-btn>
-            <q-btn class="button" label="Posts" color="blue"
-                @click="useRouter().push(`/pets/${petRef._id}/posts`)"></q-btn>
-            <q-btn class="button" label="report" color="red" @click="petReport()" />
-            <q-btn class="button" v-if="petRef.master._id == useUser().getUser()?._id"
-                @click="navigateToCreatePost(petRef._id)" label="Crear post" color="green"></q-btn>
+            <div class="container-buttons col-12" v-if="!report">
+                <q-btn class="button" label="Media" color="orange" @click="popup(petRef)"></q-btn>
+                <q-btn class="button" label="Posts" color="blue"
+                    @click="useRouter().push(`/pets/${petRef._id}/posts`)"></q-btn>
+                <q-btn class="button" label="report" color="red" @click="petReport()" />
+                <q-btn class="button" v-if="petRef.master._id == useUser().getUser()?._id"
+                    @click="navigateToCreatePost(petRef._id)" label="Crear post" color="green"></q-btn>
 
+            </div>
         </div>
+
     </div>
 </template>
 
@@ -85,6 +93,9 @@ const props = defineProps({
     report: Boolean,
     editar: Boolean
 })
+
+let media = ref({ pet: [], popup: false });
+let reportRef = ref({ id: '', show: false, tipo: '' })
 
 const petRef = ref(props.pet)
 const snapshot = ref(undefined)
@@ -110,6 +121,15 @@ const sexOptions = [{
     value: 'Macho'
 }]
 
+function popup(pet) {
+    media.value.popup = true;
+    media.value.pet = pet.multimedia;
+}
+
+function updatePopup(newValue) {
+    media.value.popup = newValue;
+}
+
 function saveChanges() {
     const formData = new FormData()
     if (uploadedProfilePic.value) {
@@ -134,11 +154,10 @@ function restoreDefaultValues() {
 }
 
 function petReport() {
-    emits('report')
-}
-
-function popup() {
-    emits('showMedia')
+    reportRef.value.id = props.pet._id;
+    reportRef.value.tipo = 'Mascota';
+    reportRef.value.show = true;
+    console.log(reportRef.value, 'report desde pet!')
 }
 
 function navigateToCreatePost(id) {
@@ -171,7 +190,7 @@ const emits = defineEmits(['report', 'showMedia'])
 .info {
     border: 3px solid chocolate;
     border-radius: 7.5%;
-    background-color: rgba(244, 234, 225, 0.847);
+    background-color: rgba(244, 234, 225, 1);
     width: 50%;
     min-height: 450px;
     margin: auto;

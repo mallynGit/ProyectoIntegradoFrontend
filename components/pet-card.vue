@@ -103,7 +103,7 @@ function navigateToPet(id) {
   max-height: 40vh;
   overflow-y: scroll;
   border: 1px solid whitesmoke;
-  background-color: #ca7a2fa4;
+  background-color: rgb(202, 133, 68);
 }
 
 .pet-card::-webkit-scrollbar {

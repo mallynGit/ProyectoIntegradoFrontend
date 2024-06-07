@@ -52,7 +52,13 @@ useUser()
 }
 
 .content {
-  background-color: #e9c9ab7a;
+  background-image: url('@/assets/images/gatos2.png'), linear-gradient(rgba(233, 201, 171, 0.478), rgba(233, 201, 171, 0.478));
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  /* background-color: rgba(233, 201, 171, 0.478); */
+  background-blend-mode: overlay;
+
   flex: 1;
   /* Hace que el contenido ocupe todo el espacio disponible en el contenedor */
   overflow: auto;

@@ -3,16 +3,13 @@
 
         <q-btn class="back-button" @click="useRouter().back()" icon="mdi-arrow-left"> </q-btn>
 
-        <ShowMedia :media="media.pet" :model-value="media.popup" @update:model-value="(v) => updatePopup(v)" />
-        <ReportForm :id="report.id" :model-value="report.show" @update:model-value="(v) => report.show = v"
-            :tipo="report.tipo" />
+        
         <div v-if="!loading" style="height: 100%" class="q-pa-sm">
             <!-- perfil -->
             
             <pet-profile :pet="pet" @report="(v) => petReport(v)" @showMedia="popup(pet)" />
 
-            <q-separator />
-            <div class="comentarios q-pa-md q-mb-md">
+            <div class="comentarios q-pa-md q-mt-lg">
 
                 <div v-if="useUser().isLogged()">
                     <q-input label="Comentario a escribir" ref="comentario" flat
@@ -59,8 +56,7 @@ const totalPages = computed(() => Math.ceil(pet.value.comentarios.length / pageS
 const id = useRoute().params.id;
 const apiUrl = useRuntimeConfig().public.urlApi;
 
-let media = ref({ pet: [], popup: false });
-let report = ref({ id: '', show: false, tipo: '' })
+
 const pet = ref({});
 const comentarioInput = ref(null);
 const comentario = ref(null);
@@ -100,23 +96,12 @@ function reply(reply) {
     })
 }
 
-function petReport() {
-    report.value.id = pet.value._id;
-    report.value.tipo = 'Mascota';
-    report.value.show = true;
-    console.log(report.value, 'report desde pet!')
-}
-
-
 function commentReport(form) {
     report.value.id = form.reportedId;
     report.value.tipo = 'Comentario';
     report.value.show = true;
     console.log(report.value, 'report desde comment!')
 }
-
-
-
 
 async function postComment(content) {
     console.log(paginatedComments);
@@ -135,26 +120,15 @@ async function postComment(content) {
     comentario.value.blur();
 }
 
-function popup(pet) {
-    media.value.popup = true;
-    media.value.pet = pet.multimedia;
-}
-
-function updatePopup(newValue) {
-    media.value.popup = newValue;
-}
-
-
-
-function formatDate(timestamp) {
-    const date = new Date(timestamp);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${day}-${month}-${year} ${hours}:${minutes}`;
-}
+// function formatDate(timestamp) {
+//     const date = new Date(timestamp);
+//     const year = date.getFullYear();
+//     const month = String(date.getMonth() + 1).padStart(2, '0');
+//     const day = String(date.getDate()).padStart(2, '0');
+//     const hours = String(date.getHours()).padStart(2, '0');
+//     const minutes = String(date.getMinutes()).padStart(2, '0');
+//     return `${day}-${month}-${year} ${hours}:${minutes}`;
+// }
 
 </script>
 
@@ -168,12 +142,16 @@ function formatDate(timestamp) {
     margin-top: 2em;
     margin-left: 1.5em;
     border-radius: 35%;
+    background-color: aliceblue;
 }
 
 .comentarios {
     // height: auto
     max-width: 80vw;
-    margin: 0px auto;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgba(245,245,245, 0.68);
+    border-radius: 4px;
 }
 
 

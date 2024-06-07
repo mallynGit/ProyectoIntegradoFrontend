@@ -6,9 +6,14 @@
                 <q-input label="Filtro" v-model="filtro" />
             </div>
         </div>
-        <q-pagination class="paginacion" v-model="paginaActual" :max="totalPaginas" direction-links boundary-links />
-        <div class="pets row pet-container">
-            <pet-card v-for="pet in petsPag" :key="pet._id" :pet="pet" />
+        <div class="content-wrapper">
+            <div class="background">
+                <q-pagination class="paginacion" v-model="paginaActual" :max="totalPaginas" direction-links
+                    boundary-links />
+                <div class="pets row pet-container">
+                    <pet-card v-for="pet in petsPag" :key="pet._id" :pet="pet" />
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -42,7 +47,6 @@ function checkFiltro() {
     console.log(filtro.value, selectedFilter.value, ' filtro!')
     console.log('?!', petsPag.value)
 }
-
 </script>
 
 <style scoped lang="scss">
@@ -56,9 +60,24 @@ function checkFiltro() {
     margin: auto;
 }
 
-.filtro{
+.content-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.background {
+    background-color: rgb(253, 243, 231);
+    padding: 1em;
+    max-width: 85%;
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid lightslategrey;
+}
+
+.filtro {
     background-color: rgb(253, 243, 231);
     border-radius: 15px;
+    border: 1px solid lightslategrey;
 }
 
 .paginacion {
@@ -67,65 +86,18 @@ function checkFiltro() {
     margin-top: 3em;
 }
 
-
 .pet-card:hover {
     outline: 5px solid rgb(0, 0, 0);
 }
 
 .pets {
-    width: 85%;
-    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .pet-container {
     justify-content: space-around;
     margin-top: 3em;
-
-    // background-color: black;
-}
-
-.pet-card {
-    height: 50vh;
-    overflow-y: scroll;
-    border: 1px solid whitesmoke;
-    background-color: #ca7a2fa4;
-    cursor: pointer;
-}
-
-.pet-card::-webkit-scrollbar {
-    width: 8px;
-}
-
-.pet-card::-webkit-scrollbar-thumb {
-    background-color: #ca7a2f;
-    border-radius: 10px;
-}
-
-// .pet-card::-webkit-scrollbar-track {
-//     background: #f1f1f1;
-// }
-
-@media screen and (max-width: 1420px) {}
-
-p {
-    user-select: none;
-}
-
-.card-container {}
-
-.card-text-content {
-    max-width: 125px;
-    min-width: 125px;
-    overflow: hidden;
-    word-wrap: break-word;
-}
-
-.img {
-    border: 2px solid whitesmoke;
-    border-radius: 8px;
-    width: 180px;
-    height: auto;
-    fit: cover;
-    background-color: #ca7a2f;
 }
 </style>

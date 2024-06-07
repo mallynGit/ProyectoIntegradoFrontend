@@ -134,12 +134,12 @@ function formatDate(timestamp) {
     width: 100%;
     padding: 5px 12.5px;
     font-size: 12px;
-    background-color: rgba(80, 80, 80, 0.698);
+    background-color: rgba(80, 80, 80, 1);
     color: whitesmoke;
 }
 
 .reply-header {
-    background-color: rgba(138, 138, 138, 0.698) !important;
+    background-color: rgba(138, 138, 138, 1) !important;
 
 }
 
@@ -147,7 +147,7 @@ function formatDate(timestamp) {
     display: flex;
     flex: 1;
     padding: 10px;
-    background-color: rgba(211, 151, 21, 0.384);
+    background-color: rgb(180, 148, 88);
     border: 3px solid whitesmoke;
 }
 
@@ -165,7 +165,7 @@ function formatDate(timestamp) {
 }
 
 .reply-body {
-    background-color: rgba(166, 142, 89, 0.384) !important;
+    background-color: rgb(212, 181, 123) !important;
 }
 
 .reply {

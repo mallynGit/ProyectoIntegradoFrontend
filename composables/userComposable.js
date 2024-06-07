@@ -13,6 +13,10 @@ export const useUser = () => {
     return await userStore.getChats();
   };
 
+  const isAdmin = () => {
+    return userStore.user.role.toLowerCase().trim() == 'admin'
+  };
+
   const sendMessage = async (msg) => {
     return await userStore.sendMessage(msg);
   };
@@ -90,5 +94,6 @@ export const useUser = () => {
     update,
     register,
     retrieveUser,
+    isAdmin,
   };
 };

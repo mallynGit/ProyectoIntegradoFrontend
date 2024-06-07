@@ -135,6 +135,8 @@ const register = async () => {
     display: flex;
     flex-wrap: wrap;
     min-height: 40vh;
+    width: 80vw;
+    margin: auto;
 }
 
 .container-register {
@@ -143,7 +145,7 @@ const register = async () => {
     border-radius: 8px;
     box-shadow: rgb(223, 125, 46) 0px 5px 10px 4px;
     margin-top: 3em;
-    background-color: #fff4ea;
+    background-color: whitesmoke;
 
 }
 
@@ -172,5 +174,6 @@ const register = async () => {
     // min-height: 100px;
     height: 62vh;
     margin-top: 5em;
+    background-color: whitesmoke;
 }
 </style>

@@ -73,7 +73,7 @@ const login = async () => {
   padding: 1em;
   border-radius: 8px;
   box-shadow: rgb(223, 125, 46) 0px 5px 10px 4px;
-  background-color: #fff4ea;
+  background-color: whitesmoke;
 }
 .button-container {
   display: flex;
