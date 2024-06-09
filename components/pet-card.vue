@@ -99,6 +99,7 @@ function navigateToPet(id) {
 .pet-card {
   height: 30vh;
   min-height: 360px;
+  min-width: 500px;
   max-width: 500px;
   max-height: 40vh;
   overflow-y: scroll;

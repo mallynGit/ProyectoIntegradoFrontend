@@ -23,34 +23,32 @@
                   (val && val.length > 0) || 'Debes introducir una contraseña',
               ]"
             />
-              <q-input
-                filled
-                type="password"
-                v-model="changePwd.newPwd"
-                label="Contraseña nueva"
-                :rules="[
-                  (val) =>
-                    (val && val.length > 0) ||
-                    'Debes introducir una contraseña',
-                  (val) =>
-                    (val && val == changePwd.repeatNewPwd) ||
-                    'Las contraseñas no coinciden',
-                ]"
-              />
-              <q-input
-                filled
-                type="password"
-                v-model="changePwd.repeatNewPwd"
-                label="Repetir contraseña nueva"
-                :rules="[
-                  (val) =>
-                    (val && val.length > 0) ||
-                    'Debes introducir una contraseña',
-                  (val) =>
-                    (val && val == changePwd.newPwd) ||
-                    'Las contraseñas no coinciden',
-                ]"
-              />
+            <q-input
+              filled
+              type="password"
+              v-model="changePwd.newPwd"
+              label="Contraseña nueva"
+              :rules="[
+                (val) =>
+                  (val && val.length > 0) || 'Debes introducir una contraseña',
+                (val) =>
+                  (val && val == changePwd.repeatNewPwd) ||
+                  'Las contraseñas no coinciden',
+              ]"
+            />
+            <q-input
+              filled
+              type="password"
+              v-model="changePwd.repeatNewPwd"
+              label="Repetir contraseña nueva"
+              :rules="[
+                (val) =>
+                  (val && val.length > 0) || 'Debes introducir una contraseña',
+                (val) =>
+                  (val && val == changePwd.newPwd) ||
+                  'Las contraseñas no coinciden',
+              ]"
+            />
             <div class="row justify-center">
               <q-btn label="Cambiar contraseña" type="submit" class="button" />
               <q-btn
@@ -173,6 +171,8 @@ function saveChanges() {
   border: 3px solid rgb(211, 128, 3);
   padding: 1em;
   border-radius: 8px;
+  background-color: rgb(253, 243, 231);
+  min-height: 40vh;
 }
 
 .image {
@@ -201,7 +201,7 @@ function saveChanges() {
   color: whitesmoke;
 }
 
-.button-cancel{
+.button-cancel {
   color: chocolate;
   background-color: whitesmoke;
 }

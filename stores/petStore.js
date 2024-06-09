@@ -38,6 +38,15 @@ export const usePetStore = defineStore("pet", {
         });
     },
 
+    async uploadPicture(file, id){
+      let formD= new FormData();
+      formD.append("media", file);
+      formD.append("petId", id)
+      return await useAxiosInstance().post('/pets/uploadPicture', formD, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+    },
+
     async createPost(form) {
       return (
         await useAxiosInstance().post("/posts/createPost", form, {

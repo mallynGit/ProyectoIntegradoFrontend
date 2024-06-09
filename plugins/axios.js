@@ -13,7 +13,7 @@ export default defineNuxtPlugin(async () => {
 
   axiosInstance.interceptors.response.use(
     (response) => {
-      console.log("response ?");
+      console.log("response ?", response);
       // Aquí puedes hacer las comprobaciones que necesites
       if (response.status != 200) {
         // Mostrar alerta si el estado no es "ok"

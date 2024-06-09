@@ -1,4 +1,10 @@
 <template>
+        <ReportForm
+      :id="report.id"
+      :model-value="report.show"
+      @update:model-value="(v) => (report.show = v)"
+      :tipo="report.tipo"
+    />
     <div class="container">
 
         <q-btn class="back-button" @click="useRouter().back()" icon="mdi-arrow-left"> </q-btn>
@@ -7,7 +13,7 @@
         <div v-if="!loading" style="height: 100%" class="q-pa-sm">
             <!-- perfil -->
             
-            <pet-profile :pet="pet" @report="(v) => petReport(v)" @showMedia="popup(pet)" />
+            <pet-profile :pet="pet" @showMedia="popup(pet)" />
 
             <div class="comentarios q-pa-md q-mt-lg">
 
@@ -28,7 +34,7 @@
                         :loggedIn="useUser().isLogged()" @report="(v) => commentReport(v)" mode="comment" />
 
                     <div class="replies q-mt-md">
-                        <comentario-pet v-for="r of c.respuestas" :key="r.id" :c="r" :pet="pet" mode="reply" />
+                        <comentario-pet v-for="r of c.respuestas" :key="r.id" :c="r" :pet="pet"  @report="(v) => commentReport(v)" mode="reply" />
                     </div>
 
                 </div>
@@ -44,6 +50,8 @@ import { useRuntimeConfig } from '#imports'
 import comentarioPet from '~/components/comentarioPet.vue'
 import { useUser } from '#imports';
 import { useRoute } from 'vue-router';
+
+let report = ref({ id: "", show: false, tipo: "" });
 
 const currentPage = ref(1);
 const pageSize = 4; // Por ejemplo, mostrar 5 comentarios por página
