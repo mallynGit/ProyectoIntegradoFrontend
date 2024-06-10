@@ -8,9 +8,9 @@
 
                     </q-toolbar-title>
                     <div class="container-buttons">
-                        <q-btn flat icon="mdi-dog-side" label="Pets" to="/pets" />
-                        <q-btn flat icon="mdi-account-multiple" label="Listado" to="/test/hola" v-if="logueado && useUser().isAdmin()" />
-                        <q-btn flat icon="mdi-account-alert" label="reportes" to="/test/reportes" v-if="logueado && useUser().isAdmin()" />
+                        <q-btn flat icon="mdi-dog-side" label="Mascotas" to="/pets" />
+                        <q-btn flat icon="mdi-account-multiple" label="Listado" to="/admin/listado" v-if="logueado && useUser().isAdmin()" />
+                        <q-btn flat icon="mdi-account-alert" label="reportes" to="/admin/reportes" v-if="logueado && useUser().isAdmin()" />
                         <q-btn flat icon="mdi-account-plus" label="register" to="/auth/register" v-if="!logueado" />
                         <q-btn flat icon="mdi-account-arrow-left" label="login" to="/auth/login" v-if="!logueado" />
                         <q-btn flat icon="mdi-account-circle" label="Perfil" to="/user/profile" v-if="logueado" />

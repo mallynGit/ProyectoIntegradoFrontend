@@ -67,23 +67,32 @@
   <div class="text-h5 container">
     <q-img
       ratio="1"
-      class="q-ma-lg image"
-      :src="`${apiUrl}/uploads/${user._id}`"
+      class="q-ma-lg image cursor-pointer"
+      :src="profilePic"
+      :class="`profile-img ${editar ? 'img-edit' : ''}`"
+      @click="editar ? triggerFileInput() : ''"
     />
+    <input
+      type="file"
+      ref="fileInput"
+      style="display: none"
+      @change="handleFileUpload"
+    />
+
     <div class="q-mt-md">
       <div v-for="(field, index) in filteredFields" class="info q-my-sm">
         <span class="text-weight-bold">{{ index }}: </span>
         <span v-if="!editar">{{ field }}</span>
         <q-input dense v-else v-model="snapshot[index]" />
       </div>
-      <q-btn
+      <!-- <q-btn
         class="button"
         @click="changePassword = true"
         v-if="editar"
         label="Cambiar contraseña"
-      ></q-btn>
+      ></q-btn> -->
       <div class="container-buttons q-pt-xl">
-        <q-btn class="button" to="/pets/add-pet">Anadir mascota</q-btn>
+        <q-btn class="button" to="/pets/add-pet">Añadir mascota</q-btn>
         <q-btn class="button" @click="showPets = true">Ver mascotas</q-btn>
         <div>
           <q-btn class="button" @click="editar = true" v-if="!editar"
@@ -98,6 +107,7 @@
             </q-btn>
           </div>
         </div>
+        <q-btn class="button" @click="darDeBaja()">Dar de baja</q-btn>
       </div>
     </div>
   </div>
@@ -109,12 +119,31 @@ const user = useUser().getUser();
 const showPets = ref(false);
 const changePassword = ref(false);
 const editar = ref(false);
+const uploadedProfilePic = ref(null);
+const fileInput = ref(null);
+const profilePic = ref(`${apiUrl}/uploads/${user._id}`);
 
 const changePwd = ref({
   password: "",
   newPwd: "",
   repeatNewPwd: "",
 });
+
+function handleFileUpload(event) {
+  const file = event.target.files[0];
+  uploadedProfilePic.value = file;
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      profilePic.value = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+function triggerFileInput() {
+  fileInput.value.click();
+}
 
 const pets = ref(await usePet().getUserPets(user._id));
 
@@ -124,11 +153,12 @@ definePageMeta({
 
 let item;
 if (user) {
-  item = (({ pets, posts, role, _id, ...item }) => item)(user);
+  item = (({ pets, posts, role, _id, bloqueado, ...item }) => item)(user);
 }
 
 const filteredFields = ref(item);
 const snapshot = ref(undefined);
+const uploadPicture = ref(null);
 
 watch(editar, (x) => {
   if (!x) {
@@ -143,10 +173,44 @@ function restoreDefaultValues() {
   editar.value = false;
 }
 
+function uploadPic() {
+  uploadPicture.value.$el.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    console.log(event.target, "VALE!!!!!!");
+  });
+  uploadPicture.value.$el.click();
+}
+
 function saveChanges() {
-  console.log(snapshot.value, filteredFields.value);
+  const formData = new FormData();
+  formData.append("nombre", snapshot.value.nombre);
+  formData.append("apellidos", snapshot.value.apellidos);
+  formData.append("email", snapshot.value.email);
+  formData.append("nick", snapshot.value.nick);
+  formData.append("userId", user._id);
+  formData.append("updateUser", true);
+  if (uploadedProfilePic.value) {
+    formData.append(
+      "media",
+      uploadedProfilePic.value,
+      `update_${user._id}.${uploadedProfilePic.value.type.split("/")[1]}`
+    );
+  }
+  console.log(snapshot.value, filteredFields.value, formData, user._id);
+  useAxiosInstance().put("/user/update/" + user._id, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
   filteredFields.value = snapshot.value;
   editar.value = false;
+}
+
+async function darDeBaja() {
+  await useAxiosInstance()
+    .delete("/user/delete/" + user._id)
+    .then(() => {
+      useUser().logout();
+      useRouter().push("/auth/login");
+    });
 }
 </script>
 

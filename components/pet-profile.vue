@@ -101,7 +101,7 @@
           </div>
         </div>
       </div>
-      <div class="container-buttons col-12" v-if="!report">
+      <div class="container-buttons col-12 justify-evenly" v-if="!report">
         <q-file
           style="display: none"
           ref="uploadPicture"
@@ -113,6 +113,8 @@
           label="subir foto"
           color="grey"
           @click="uploadPic()"
+          v-if="petRef.master._id == useUser().getUser()?._id"
+
         >
         </q-btn>
         <q-btn
@@ -122,12 +124,11 @@
           @click="popup(petRef)"
         ></q-btn>
         <q-btn
-          class="button"
-          label="Posts"
-          color="blue"
-          @click="useRouter().push(`/pets/${petRef._id}/posts`)"
+        class="button"
+        label="Posts"
+        color="blue"
+        @click="useRouter().push(`/pets/${petRef._id}/posts`)"
         ></q-btn>
-        <q-btn class="button" label="report" color="red" @click="petReport()" />
         <q-btn
           class="button"
           v-if="petRef.master._id == useUser().getUser()?._id"
@@ -135,6 +136,8 @@
           label="Crear post"
           color="green"
         ></q-btn>
+        <q-btn class="button" label="report" color="red" @click="petReport()" v-if="useUser().isLogged()" />
+        <q-btn class="button" label="Dar de baja" color="red" @click="deletePet()" v-if="petRef.master._id == useUser().getUser()?._id || useUser().getUser()?.role.toLowerCase() == 'admin'"></q-btn>
       </div>
     </div>
   </div>
@@ -183,6 +186,12 @@ const sexOptions = [
 function popup(pet) {
   media.value.popup = true;
   media.value.pet = pet.multimedia;
+}
+
+function deletePet(){
+  useAxiosInstance().delete("/pets/delete?id="+petRef.value._id).then(() => {
+    useRouter().push({ path: "/pets" });
+  })
 }
 
 function uploadPic() {

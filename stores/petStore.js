@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import { useAxiosInstance } from "~/utils/axiosInstance.js";
 import { duplicate } from "~/utils/duplicateMedia";
-import axios from "axios";
 const env = useRuntimeConfig().public;
 
 export const usePetStore = defineStore("pet", {
@@ -15,6 +14,8 @@ export const usePetStore = defineStore("pet", {
       this.pets = pets;
       return pets;
     },
+
+    
 
     async getUserPets(id) {
       return (await useAxiosInstance().get("/user/getUserPets/" + id)).data;

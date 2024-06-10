@@ -20,11 +20,12 @@
             label="Categoria"
             v-model="filtro.categoria"
           />
-          <q-input
-            style="max-width: 15%"
+          <q-select
+            style="max-width: 15%; min-width: 15%"
             dense
             label="Sexo"
             v-model="filtro.sexo"
+            :options="['Macho', 'Hembra']"
           />
           <q-input
             style="max-width: 15%"

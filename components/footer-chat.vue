@@ -72,6 +72,7 @@
               <form @submit.prevent="testeo">
                 <q-input
                   type="text"
+                  outlined
                   placeholder="Escribe mensaje"
                   dense
                   v-model="newMessage"
@@ -122,6 +123,11 @@
                       (i) => i._id != useUser().getUser()._id
                     )[0].nick
                   }}
+                </q-item-section>
+
+                <q-item-section side
+                  >
+                  <q-btn flat icon="mdi-download" style="z-index:1;" @click="downloadChat(v._id)"></q-btn>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -176,6 +182,17 @@ onBeforeMount(async () => {
       }
     });
 });
+
+async function downloadChat(id){
+  useAxiosInstance().get('/chat/download?id='+id).then((res)=>{
+    const url = window.URL.createObjectURL(new Blob([res.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'chat.txt');
+    document.body.appendChild(link);
+    link.click();
+  })
+}
 
 function openChatGo(item) {
   useUser()
@@ -248,12 +265,10 @@ watch(openChat, (old) => {
     max-height: 100%;
     width: 60%;
     height: 100%;
-    border: 1px solid goldenrod;
     background-color: white;
     pointer-events: all;
 
     .conversation {
-      border: 1px solid greenyellow;
       display: flex;
       flex-direction: column;
       height: 100%;
@@ -265,7 +280,6 @@ watch(openChat, (old) => {
       // min-height: 42vh;
       max-width: 100%;
       text-wrap: wrap;
-      border: 1px solid red;
 
       .scr {
         min-height: 37.5vh;
@@ -286,7 +300,6 @@ watch(openChat, (old) => {
     // background-color: white;
 
     .chat-list {
-      border: 1px solid red;
       max-height: 40vh;
       min-height: 40vh;
       overflow-y: auto;

@@ -96,6 +96,7 @@ async function updateResuelto(index) {
     index,
     reportes.value
   );
+  useAxiosInstance().put("/reports/checkResuelto?id=" + index);
 }
 
 const cols = [

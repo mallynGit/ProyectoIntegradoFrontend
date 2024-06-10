@@ -1,19 +1,34 @@
 <template>
-  <q-btn @click="useRouter().back()">pa tras</q-btn>
+  <div class="container">
+    <q-btn @click="useRouter().back()">Volver</q-btn>
 
-  <form @submit.prevent.default="p">
-    <q-input label="Titulo" v-model="form.titulo"></q-input>
-    <q-input type="textarea" label="Cuerpo del post" v-model="form.contenido"></q-input>
-    <q-file label="Multimedia (puedes elegir hasta varios archivos)" multiple append v-model="form.multimedia"
-      @update:model-value="checkImages"></q-file>
-    <div>
-      <span v-for="(pic, index) in picture" :key="index" style="position: relative;">
-        <q-btn @click="removeImg(index)" class="remove">X</q-btn>
-        <q-img :src="pic" alt="wow" width="200px"></q-img>
-      </span>
-    </div>
-    <q-btn type="submit" label="crear post"></q-btn>
-  </form>
+    <form @submit.prevent.default="p">
+      <q-input label="Titulo" v-model="form.titulo"></q-input>
+      <q-input
+        type="textarea"
+        label="Cuerpo del post"
+        v-model="form.contenido"
+      ></q-input>
+      <q-file
+        label="Multimedia (puedes elegir hasta varios archivos)"
+        multiple
+        append
+        v-model="form.multimedia"
+        @update:model-value="checkImages"
+      ></q-file>
+      <div>
+        <span
+          v-for="(pic, index) in picture"
+          :key="index"
+          style="position: relative"
+        >
+          <q-btn @click="removeImg(index)" class="remove">X</q-btn>
+          <q-img :src="pic" alt="wow" width="200px"></q-img>
+        </span>
+      </div>
+      <q-btn type="submit" label="crear post"></q-btn>
+    </form>
+  </div>
 </template>
 
 <script setup>
@@ -62,7 +77,7 @@ async function p() {
   console.log(form, "chulo!");
   const createdPost = await usePet().createPost(formD);
   useRouter().push({ path: `/pets/${id}/posts/${createdPost._id}` });
-  console.log(createdPost, ' a ver el pos creado')
+  console.log(createdPost, " a ver el pos creado");
 }
 </script>
 
@@ -72,5 +87,16 @@ async function p() {
   background-color: antiquewhite;
   right: 0;
   z-index: 1;
+}
+
+.container {
+  width: 80%;
+  margin: 2em auto 0 auto;
+  justify-content: center;
+  border: 3px solid rgb(211, 128, 3);
+  padding: 1em;
+  border-radius: 8px;
+  background-color: rgb(253, 243, 231);
+  min-height: 40vh;
 }
 </style>

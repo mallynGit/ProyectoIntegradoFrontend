@@ -5,11 +5,28 @@
     :model-value="showReport"
     @update:model-value="(v) => (showReport = v)"
   />
+
+  <ShowMedia
+    :media="post.multimedia"
+    :model-value="showMedia"
+    @update:model-value="(v) => updateShowMedia(v)"
+  />
+
   <div class="container">
-    <q-btn flat rounded @click="useRouter().back()" icon="mdi-arrow-left" class="backbtn">
+    <q-btn
+      flat
+      rounded
+      @click="useRouter().back()"
+      icon="mdi-arrow-left"
+      class="backbtn"
+    >
     </q-btn>
 
-    <q-btn flat color="red" class="cursor-pointer report" @click="showReport = true"
+    <q-btn
+      flat
+      color="red"
+      class="cursor-pointer report"
+      @click="showReport = true"
       ><q-icon name="mdi-flag" /> Reportar</q-btn
     >
 
@@ -17,12 +34,13 @@
     <div class="q-pb-xl postcontent">
       <p>{{ post.contenido }}</p>
     </div>
-    <div class="images q-py-md">
-      <q-img
+    <div class="images q-py-md ">
+      <q-btn @click="showMedia = true" >Ver multimedia</q-btn>
+      <!-- <q-img
         v-for="i of post.multimedia"
         :src="apiUrl + '/uploads/' + i"
         width="200px"
-      ></q-img>
+      ></q-img> -->
     </div>
   </div>
 </template>
@@ -32,12 +50,16 @@ import { usePet } from "~/composables/petComposable";
 const apiUrl = useRuntimeConfig().public.urlApi;
 const route = useRoute();
 const post = ref({});
+const showMedia = ref(false);
 
 onBeforeMount(async () => {
   post.value = await usePet().getPost(route.params.postId);
 });
 const showReport = ref(false);
 
+function updateShowMedia(newValue) {
+  showMedia.value = newValue;
+}
 const { id, postId } = route.params;
 </script>
 
@@ -62,7 +84,6 @@ const { id, postId } = route.params;
 
 .postcontent {
   min-height: 300px;
-  border: 1px solid cyan;
 }
 
 .report {
